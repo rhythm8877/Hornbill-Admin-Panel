@@ -6,8 +6,8 @@ import "./HotelsGuestHouse.css";
 
 const HotelsGuestHouse = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPropertyType, setSelectedPropertyType] = useState(null);
-  const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [selectedPropertyType, setSelectedPropertyType] = useState({ value: "All", label: "All" });
+  const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
 
@@ -157,12 +157,14 @@ const HotelsGuestHouse = () => {
 
   // Property type options
   const propertyTypeOptions = [
+    { value: "All", label: "All" },
     { value: "Hotel", label: "Hotel" },
     { value: "Guest House", label: "Guest House" }
   ];
 
   // District options
   const districtOptions = [
+    { value: "All", label: "All" },
     { value: "Chumoukedima/Dimapur", label: "Chumoukedima/Dimapur" },
     { value: "Kiphire", label: "Kiphire" },
     { value: "Kohima", label: "Kohima" },
@@ -177,7 +179,7 @@ const HotelsGuestHouse = () => {
     { value: "Tuensang", label: "Tuensang" },
     { value: "Tseminyü", label: "Tseminyü" },
     { value: "Wokha", label: "Wokha" },
-    { value: "Zunheboto", label: "Zunheboto" }
+    { value: "Zünheboto", label: "Zünheboto" }
   ];
 
   // Filter hotels based on search term, property type and district
@@ -187,8 +189,11 @@ const HotelsGuestHouse = () => {
       hotel.ownerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       hotel.phoneNumber.includes(searchTerm);
     
-    const matchesPropertyType = !selectedPropertyType || hotel.propertyType === selectedPropertyType.value;
-    const matchesDistrict = !selectedDistrict || hotel.district === selectedDistrict.value;
+    const matchesPropertyType = selectedPropertyType.value === "All" || 
+      hotel.propertyType === selectedPropertyType.value;
+    
+    const matchesDistrict = selectedDistrict.value === "All" || 
+      hotel.district === selectedDistrict.value;
     
     return matchesSearch && matchesPropertyType && matchesDistrict;
   });

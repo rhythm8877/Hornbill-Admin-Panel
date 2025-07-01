@@ -1,0 +1,297 @@
+:root {
+  --guide-primary-color: #24B295;
+  --guide-primary-light: #e5f7f3;
+  --guide-secondary-color: #f8f9fa;
+  --guide-border-color: #c9ede7;
+  --guide-text-color: #333;
+  --guide-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.guide-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.guide-container header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.guide-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--guide-primary-color);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.guide-data-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--guide-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.guide-control-panel-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.guide-filters-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.guide-search-container {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.guide-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.guide-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+.guide-search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  font-size: 14px;
+  border: 1px solid var(--guide-border-color);
+  border-radius: 6px;
+  outline: none;
+  background-color: var(--guide-secondary-color);
+}
+
+.guide-search-input:focus {
+  border-color: var(--guide-primary-color);
+  box-shadow: 0 0 0 2px rgba(36, 178, 149, 0.1);
+}
+
+.guide-dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.guide-label-text {
+  font-weight: 600;
+  color: var(--guide-primary-color);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.guide-select-container {
+  min-width: 220px;
+}
+
+.guide-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+  font-size: 14px;
+  border: 1px solid var(--guide-border-color);
+}
+
+.guide-table th, .guide-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid var(--guide-border-color);
+  min-width: 100px;
+  vertical-align: top;
+}
+
+.guide-table th {
+  background-color: var(--guide-primary-light);
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+  color: var(--guide-primary-color);
+}
+
+.guide-table td {
+  text-align: left;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.guide-sl-no-header, .guide-sl-no-cell {
+  min-width: 60px !important;
+  max-width: 80px !important;
+  width: 60px !important;
+}
+
+.guide-districts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.guide-district-tag {
+  background-color: var(--guide-primary-light);
+  color: var(--guide-primary-color);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Photo Modal Styles */
+.guide-photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.guide-photo-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.guide-photo-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.guide-photo-modal-close:hover {
+  color: #000;
+}
+
+.guide-modal-photo {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .guide-container {
+    padding: 10px;
+  }
+
+  .guide-container header {
+    margin-bottom: 20px;
+  }
+
+  .guide-logo-text {
+    font-size: 24px;
+  }
+
+  .guide-control-panel-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .guide-filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .guide-search-container {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .guide-dropdown-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .guide-select-container {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .guide-table {
+    font-size: 12px;
+    min-width: 800px;
+  }
+
+  .guide-table th, .guide-table td {
+    padding: 8px 10px;
+    min-width: 80px;
+  }
+
+  .guide-data-container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .guide-container {
+    padding: 10px;
+  }
+
+  .guide-logo-text {
+    font-size: 20px;
+  }
+
+  .guide-table {
+    font-size: 11px;
+  }
+
+  .guide-table th, .guide-table td {
+    padding: 6px 8px;
+  }
+
+  .guide-photo-modal-content {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .guide-modal-photo {
+    max-height: 60vh;
+  }
+}
