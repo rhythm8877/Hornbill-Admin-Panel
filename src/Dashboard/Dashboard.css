@@ -40,6 +40,17 @@
   font-size: 1.2rem;
 }
 
+.empty-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70vh;
+  font-size: 1.2rem;
+  color: var(--text-secondary, #666);
+  text-align: center;
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;

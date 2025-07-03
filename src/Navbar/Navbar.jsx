@@ -3,13 +3,28 @@
 import { useState } from "react";
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ activeTab, setActiveTab }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-left">
+        <div className="navbar-tabs">
+          <div 
+            className={`navbar-tab ${activeTab === "Services" ? "active" : ""}`}
+            onClick={() => setActiveTab("Services")}
+          >
+            Services
+          </div>
+          <div 
+            className={`navbar-tab ${activeTab === "Festival" ? "active" : ""}`}
+            onClick={() => setActiveTab("Festival")}
+          >
+            Festival
+          </div>
+        </div>
+        
+        <div className="navbar-right">
           <div className="navbar-search">
             <button className="search-button">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -19,9 +34,7 @@ const Navbar = () => {
             </button>
             <input type="text" placeholder="Search..." />
           </div>
-        </div>
-        
-        <div className="navbar-right">
+          
           <div className="navbar-profile">
             <div className="profile-dropdown" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
               <div className="profile-avatar">

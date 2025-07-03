@@ -472,3 +472,17 @@ svg {
 .nav-subitem .nav-label {
   color: inherit;
 }
+
+.empty-sidebar-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  font-style: italic;
+  border-radius: 8px;
+  background-color: rgba(36, 178, 149, 0.1);
+  margin: 2rem 0;
+}

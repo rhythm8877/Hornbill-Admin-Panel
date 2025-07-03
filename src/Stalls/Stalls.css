@@ -1,0 +1,567 @@
+:root {
+  --stalls-primary-color: #24B295;
+  --stalls-primary-light: #e5f7f3;
+  --stalls-secondary-color: #f8f9fa;
+  --stalls-border-color: #c9ede7;
+  --stalls-text-color: #333;
+  --stalls-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --stalls-approved-color: #28a745;
+  --stalls-rejected-color: #dc3545;
+  --stalls-warning-color: #ffc107;
+}
+
+.stalls-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.stalls-container header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.stalls-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--stalls-primary-color);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.stalls-data-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--stalls-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.stalls-control-panel-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stalls-search-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.stalls-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.stalls-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+.stalls-search-input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  font-size: 14px;
+  border: 1px solid var(--stalls-border-color);
+  border-radius: 6px;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+.stalls-search-input:focus {
+  border-color: var(--stalls-primary-color);
+}
+
+.stalls-add-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.stalls-add-button {
+  padding: 10px 20px;
+  background-color: var(--stalls-primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.stalls-add-button:hover {
+  background-color: #1e9a80;
+}
+
+.stalls-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.stalls-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid var(--stalls-border-color);
+}
+
+.stalls-table th, .stalls-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid var(--stalls-border-color);
+  min-width: 100px;
+  vertical-align: top;
+}
+
+.stalls-table th {
+  background-color: var(--stalls-primary-light);
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.stalls-table td {
+  text-align: left;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.stalls-sl-no-header, .stalls-sl-no-cell {
+  min-width: 60px !important;
+  max-width: 80px !important;
+  width: 60px !important;
+}
+
+.stalls-view-permission-button {
+  padding: 6px 12px;
+  background-color: var(--stalls-primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.stalls-view-permission-button:hover {
+  background-color: #1e9a80;
+}
+
+.stalls-inline-input, .stalls-inline-select {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--stalls-border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.stalls-inline-input:focus, .stalls-inline-select:focus {
+  border-color: var(--stalls-primary-color);
+}
+
+.stalls-phone-input {
+  max-width: 120px;
+}
+
+.stalls-action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.stalls-edit-button, .stalls-delete-button, .stalls-save-button, .stalls-cancel-button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.stalls-edit-button {
+  background-color: var(--stalls-primary-color);
+}
+
+.stalls-edit-button:hover {
+  background-color: #1e9a80;
+  transform: translateY(-1px);
+}
+
+.stalls-delete-button {
+  background-color: #dc3545;
+}
+
+.stalls-delete-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.stalls-save-button {
+  background-color: var(--stalls-approved-color);
+  width: auto;
+  padding: 8px 12px;
+}
+
+.stalls-save-button:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.stalls-cancel-button {
+  background-color: #6c757d;
+  width: auto;
+  padding: 8px 12px;
+}
+
+.stalls-cancel-button:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Stall Form Styles */
+.stalls-form-container {
+  width: 100%;
+}
+
+.stalls-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--stalls-primary-light);
+}
+
+.stalls-form-header h3 {
+  color: var(--stalls-primary-color);
+  font-size: 24px;
+  margin: 0;
+}
+
+.stalls-back-button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.stalls-back-button:hover {
+  background-color: #5a6268;
+}
+
+.stalls-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stalls-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.stalls-form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+  width: 100%;
+}
+
+.stalls-form-group-full-width {
+  flex-basis: 100%;
+}
+
+.stalls-form-label {
+  font-weight: 600;
+  color: var(--stalls-primary-color);
+  font-size: 16px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  text-align: left;
+  margin-left: 0;
+  padding-left: 0;
+  display: block;
+}
+
+.stalls-form-text-input, .stalls-form-textarea, .stalls-form-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--stalls-border-color);
+  border-radius: 4px;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+.stalls-form-text-input:focus, .stalls-form-textarea:focus, .stalls-form-select:focus {
+  border-color: var(--stalls-primary-color);
+}
+
+.stalls-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  max-height: 120px;
+}
+
+.stalls-file-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.stalls-file-input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--stalls-border-color);
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.stalls-file-preview {
+  display: flex;
+  align-items: center;
+  background-color: var(--stalls-primary-light);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.stalls-file-name {
+  font-size: 14px;
+  color: var(--stalls-text-color);
+  font-weight: 500;
+}
+
+.stalls-form-submit-row {
+  justify-content: center;
+  margin-top: 30px;
+  display: flex;
+}
+
+.stalls-form-submit-button {
+  background-color: var(--stalls-primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 150px;
+}
+
+.stalls-form-submit-button:hover {
+  background-color: #1e9a80;
+}
+
+/* Permission Document Modal Styles */
+.stalls-permission-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.stalls-permission-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stalls-permission-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.stalls-permission-modal-close:hover {
+  color: #000;
+}
+
+.stalls-permission-document {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .stalls-container {
+    padding: 10px;
+  }
+
+  .stalls-container header {
+    margin-bottom: 20px;
+  }
+
+  .stalls-logo-text {
+    font-size: 24px;
+  }
+
+  .stalls-control-panel-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .stalls-search-container {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .stalls-add-button-container {
+    justify-content: center;
+  }
+
+  .stalls-add-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .stalls-table {
+    font-size: 12px;
+  }
+
+  .stalls-table th, .stalls-table td {
+    padding: 8px 10px;
+    min-width: 80px;
+  }
+
+  .stalls-action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .stalls-edit-button, .stalls-delete-button, .stalls-save-button, .stalls-cancel-button {
+    font-size: 12px;
+    padding: 6px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .stalls-save-button, .stalls-cancel-button {
+    width: auto;
+    padding: 6px 10px;
+  }
+
+  .stalls-data-container {
+    padding: 15px;
+  }
+
+  .stalls-form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .stalls-form-group {
+    width: 100%;
+  }
+
+  .stalls-form-label {
+    font-size: 14px;
+  }
+
+  .stalls-form-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .stalls-form-header h3 {
+    font-size: 20px;
+  }
+
+  .stalls-back-button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .stalls-inline-input, .stalls-inline-select {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stalls-container {
+    padding: 10px;
+  }
+
+  .stalls-logo-text {
+    font-size: 20px;
+  }
+
+  .stalls-table {
+    font-size: 11px;
+  }
+
+  .stalls-table th, .stalls-table td {
+    padding: 6px 8px;
+  }
+
+  .stalls-form-submit-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .stalls-form-header h3 {
+    font-size: 18px;
+  }
+
+  .stalls-permission-modal-content {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .stalls-inline-input, .stalls-inline-select {
+    font-size: 11px;
+    padding: 1px 2px;
+  }
+}
