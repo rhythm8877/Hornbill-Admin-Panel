@@ -146,6 +146,13 @@
   margin-right: 0.5rem;
 }
 
+/* Hide nav labels when sidebar is collapsed */
+.sidebar.collapsed .nav-label {
+  display: none;
+  width: 0;
+  opacity: 0;
+}
+
 .dropdown-arrow {
   margin-left: auto;
   transition: transform 0.3s ease;
