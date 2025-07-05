@@ -136,7 +136,7 @@
   font-weight: 600;
   white-space: nowrap;
   text-align: left;
-  color: var(--guide-primary-color);
+  color: black;
 }
 
 .guide-table td {

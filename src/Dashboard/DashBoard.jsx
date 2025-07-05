@@ -5,6 +5,7 @@ import CabsTaxi from "../Cabs & Taxi/CabsTaxi"
 import HotelsGuestHouse from "../Hotels & Guest House/HotelsGuestHouse"
 import Navbar from "../Navbar/Navbar"
 import RestaurantCafe from "../Restaurant & Cafe/RestaurantCafe"
+import ServicesCarousel from "../ServicesCarousel/ServicesCarousel"
 import Sidebar from "../Sidebar/Sidebar"
 import Stalls from "../Stalls/Stalls"
 import TourGuides from "../Tour Guides/TourGuides"
@@ -44,6 +45,8 @@ const Dashboard = () => {
           return <TourGuides />;
         case "restaurants":
           return <RestaurantCafe />;
+        case "carousel":
+          return <ServicesCarousel />;
         default:
           return <HotelsGuestHouse />;
       }

@@ -138,7 +138,7 @@
   font-weight: 600;
   white-space: nowrap;
   text-align: left;
-  color: var(--cab-primary-color);
+  color: black;
 }
 
 .cab-table td {

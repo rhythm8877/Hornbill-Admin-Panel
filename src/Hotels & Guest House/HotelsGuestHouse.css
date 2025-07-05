@@ -134,11 +134,11 @@
 }
 
 .hotel-table th {
-  background-color: var(--hotel-primary-light);
+  background-color: var(--primary-light);
   font-weight: 600;
   white-space: nowrap;
   text-align: left;
-  color: var(--hotel-primary-color);
+  color: black;
 }
 
 .hotel-table td {

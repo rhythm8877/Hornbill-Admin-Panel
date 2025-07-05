@@ -121,6 +121,25 @@ const Sidebar = ({ onNavigate, activeTab = "Services" }) => {
               </div>
               <span className="nav-label">Restaurants & Cafes</span>
             </div>
+
+            <div
+              className={`nav-item ${activeItem === "carousel" ? "active" : ""}`}
+              onClick={() => handleItemClick("carousel")}
+            >
+              <div className="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M22 12h-4"></path>
+                  <path d="M6 12H2"></path>
+                  <path d="M17 12l-3 3"></path>
+                  <path d="M17 12l-3-3"></path>
+                  <path d="M7 12l3 3"></path>
+                  <path d="M7 12l3-3"></path>
+                </svg>
+              </div>
+              <span className="nav-label">Services Carousel</span>
+            </div>
           </>
         )}
         
