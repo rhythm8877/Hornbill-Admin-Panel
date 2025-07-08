@@ -10,6 +10,7 @@ import Sidebar from "../Sidebar/Sidebar"
 import Stalls from "../Stalls/Stalls"
 import TourGuides from "../Tour Guides/TourGuides"
 import TourOperators from "../Tour Operators/TourOperators"
+import TouristSpots from "../Tourist Spots/TouristSpots"
 import "./Dashboard.css"
 
 const Dashboard = () => {
@@ -55,6 +56,8 @@ const Dashboard = () => {
       switch (activeSection) {
         case "stalls":
           return <Stalls />;
+        case "touristSpots":
+          return <TouristSpots />;
         default:
           return <Stalls />;
       }
