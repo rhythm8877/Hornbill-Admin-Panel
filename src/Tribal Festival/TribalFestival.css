@@ -1,0 +1,630 @@
+:root {
+  --tribal-festival-primary-color: #24B295;
+  --tribal-festival-primary-light: #e5f7f3;
+  --tribal-festival-secondary-color: #f8f9fa;
+  --tribal-festival-border-color: #c9ede7;
+  --tribal-festival-text-color: #333;
+  --tribal-festival-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --tribal-festival-approved-color: #28a745;
+  --tribal-festival-rejected-color: #dc3545;
+  --tribal-festival-warning-color: #ffc107;
+}
+
+.tribal-festival-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tribal-festival-container header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.tribal-festival-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--tribal-festival-primary-color);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tribal-festival-data-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--tribal-festival-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.tribal-festival-control-panel-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tribal-festival-search-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.tribal-festival-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tribal-festival-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+.tribal-festival-search-input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  font-size: 14px;
+  border: 1px solid var(--tribal-festival-border-color);
+  border-radius: 6px;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+.tribal-festival-search-input:focus {
+  border-color: var(--tribal-festival-primary-color);
+}
+
+.tribal-festival-add-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.tribal-festival-add-button {
+  padding: 10px 20px;
+  background-color: var(--tribal-festival-primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tribal-festival-add-button:hover {
+  background-color: #1e9a80;
+}
+
+.tribal-festival-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.tribal-festival-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid var(--tribal-festival-border-color);
+}
+
+.tribal-festival-table th, .tribal-festival-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid var(--tribal-festival-border-color);
+  min-width: 100px;
+  vertical-align: top;
+}
+
+.tribal-festival-table th {
+  background-color: var(--tribal-festival-primary-light);
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.tribal-festival-table td {
+  text-align: left;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.tribal-festival-sl-no-header, .tribal-festival-sl-no-cell {
+  min-width: 60px !important;
+  max-width: 80px !important;
+  width: 60px !important;
+}
+
+.tribal-festival-description-cell {
+  max-width: 400px;
+  min-width: 300px;
+}
+
+.tribal-festival-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 2px solid var(--tribal-festival-border-color);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tribal-festival-photo-container:hover {
+  transform: scale(1.1);
+  border-color: var(--tribal-festival-primary-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tribal-festival-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.tribal-festival-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px;
+}
+
+.tribal-festival-inline-input, .tribal-festival-inline-select, .tribal-festival-inline-textarea {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--tribal-festival-border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.tribal-festival-inline-input:focus, .tribal-festival-inline-select:focus, .tribal-festival-inline-textarea:focus {
+  border-color: var(--tribal-festival-primary-color);
+}
+
+.tribal-festival-inline-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.tribal-festival-action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tribal-festival-edit-button, .tribal-festival-delete-button, .tribal-festival-save-button, .tribal-festival-cancel-button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.tribal-festival-edit-button {
+  background-color: var(--tribal-festival-primary-color);
+}
+
+.tribal-festival-edit-button:hover {
+  background-color: #1e9a80;
+  transform: translateY(-1px);
+}
+
+.tribal-festival-delete-button {
+  background-color: #dc3545;
+}
+
+.tribal-festival-delete-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.tribal-festival-save-button {
+  background-color: var(--tribal-festival-approved-color);
+  width: auto;
+  padding: 8px 12px;
+}
+
+.tribal-festival-save-button:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.tribal-festival-cancel-button {
+  background-color: #6c757d;
+  width: auto;
+  padding: 8px 12px;
+}
+
+.tribal-festival-cancel-button:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Festival Form Styles */
+.tribal-festival-form-container {
+  width: 100%;
+}
+
+.tribal-festival-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--tribal-festival-primary-light);
+}
+
+.tribal-festival-form-header h3 {
+  color: var(--tribal-festival-primary-color);
+  font-size: 24px;
+  margin: 0;
+}
+
+.tribal-festival-back-button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tribal-festival-back-button:hover {
+  background-color: #5a6268;
+}
+
+.tribal-festival-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tribal-festival-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.tribal-festival-form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+  width: 100%;
+}
+
+.tribal-festival-form-group-full-width {
+  flex-basis: 100%;
+}
+
+.tribal-festival-form-label {
+  font-weight: 600;
+  color: var(--tribal-festival-primary-color);
+  font-size: 16px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  text-align: left;
+  margin-left: 0;
+  padding-left: 0;
+  display: block;
+}
+
+.tribal-festival-word-count {
+  font-weight: normal;
+  font-size: 14px;
+  color: #666;
+}
+
+.tribal-festival-form-text-input, .tribal-festival-form-textarea, .tribal-festival-form-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--tribal-festival-border-color);
+  border-radius: 4px;
+  outline: none;
+  background-color: #f8f9fa;
+}
+
+.tribal-festival-form-text-input:focus, .tribal-festival-form-textarea:focus, .tribal-festival-form-select:focus {
+  border-color: var(--tribal-festival-primary-color);
+}
+
+.tribal-festival-form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  max-height: 200px;
+}
+
+.tribal-festival-file-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tribal-festival-file-input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--tribal-festival-border-color);
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.tribal-festival-image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--tribal-festival-primary-light);
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 300px;
+}
+
+.tribal-festival-preview-img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+}
+
+.tribal-festival-form-submit-row {
+  justify-content: center;
+  margin-top: 30px;
+  display: flex;
+}
+
+.tribal-festival-form-submit-button {
+  background-color: var(--tribal-festival-primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-width: 150px;
+}
+
+.tribal-festival-form-submit-button:hover {
+  background-color: #1e9a80;
+}
+
+/* Photo Modal Styles */
+.tribal-festival-photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.tribal-festival-photo-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tribal-festival-photo-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  z-index: 1001;
+}
+
+.tribal-festival-photo-modal-close:hover {
+  color: #000;
+}
+
+.tribal-festival-modal-photo {
+  max-width: 100%;
+  max-height: calc(90vh - 40px);
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .tribal-festival-container {
+    padding: 10px;
+  }
+
+  .tribal-festival-container header {
+    margin-bottom: 20px;
+  }
+
+  .tribal-festival-logo-text {
+    font-size: 24px;
+  }
+
+  .tribal-festival-control-panel-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .tribal-festival-search-container {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .tribal-festival-add-button-container {
+    justify-content: center;
+  }
+
+  .tribal-festival-add-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .tribal-festival-table {
+    font-size: 12px;
+  }
+
+  .tribal-festival-table th, .tribal-festival-table td {
+    padding: 8px 10px;
+    min-width: 80px;
+  }
+
+  .tribal-festival-photo-container {
+    width: 80px;
+    height: 50px;
+  }
+
+  .tribal-festival-action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .tribal-festival-edit-button, .tribal-festival-delete-button, .tribal-festival-save-button, .tribal-festival-cancel-button {
+    font-size: 12px;
+    padding: 6px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .tribal-festival-save-button, .tribal-festival-cancel-button {
+    width: auto;
+    padding: 6px 10px;
+  }
+
+  .tribal-festival-data-container {
+    padding: 15px;
+  }
+
+  .tribal-festival-form-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .tribal-festival-form-group {
+    width: 100%;
+  }
+
+  .tribal-festival-form-label {
+    font-size: 14px;
+  }
+
+  .tribal-festival-form-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .tribal-festival-form-header h3 {
+    font-size: 20px;
+  }
+
+  .tribal-festival-back-button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .tribal-festival-inline-input, .tribal-festival-inline-select, .tribal-festival-inline-textarea {
+    font-size: 12px;
+    padding: 2px 4px;
+  }
+
+  .tribal-festival-description-cell {
+    max-width: 250px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tribal-festival-container {
+    padding: 10px;
+  }
+
+  .tribal-festival-logo-text {
+    font-size: 20px;
+  }
+
+  .tribal-festival-table {
+    font-size: 11px;
+  }
+
+  .tribal-festival-table th, .tribal-festival-table td {
+    padding: 6px 8px;
+  }
+
+  .tribal-festival-photo-container {
+    width: 70px;
+    height: 40px;
+  }
+
+  .tribal-festival-form-submit-button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .tribal-festival-form-header h3 {
+    font-size: 18px;
+  }
+
+  .tribal-festival-photo-modal-content {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .tribal-festival-inline-input, .tribal-festival-inline-select, .tribal-festival-inline-textarea {
+    font-size: 11px;
+    padding: 1px 2px;
+  }
+
+  .tribal-festival-description-cell {
+    max-width: 150px;
+    min-width: 120px;
+  }
+}

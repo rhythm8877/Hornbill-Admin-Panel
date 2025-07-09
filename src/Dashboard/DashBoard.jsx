@@ -11,6 +11,8 @@ import Stalls from "../Stalls/Stalls"
 import TourGuides from "../Tour Guides/TourGuides"
 import TourOperators from "../Tour Operators/TourOperators"
 import TouristSpots from "../Tourist Spots/TouristSpots"
+import TribalFestival from "../Tribal Festival/TribalFestival"
+import Tribes from "../Tribes/Tribes"
 import "./Dashboard.css"
 
 const Dashboard = () => {
@@ -58,6 +60,10 @@ const Dashboard = () => {
           return <Stalls />;
         case "touristSpots":
           return <TouristSpots />;
+        case "tribes":
+          return <Tribes />;
+        case "tribalFestival":
+          return <TribalFestival />;
         default:
           return <Stalls />;
       }

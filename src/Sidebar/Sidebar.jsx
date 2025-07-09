@@ -174,6 +174,39 @@ const Sidebar = ({ onNavigate, activeTab = "Services" }) => {
               </div>
               <span className="nav-label">Tourist Spots</span>
             </div>
+
+            <div 
+              className={`nav-item ${activeItem === "tribes" ? "active" : ""}`}
+              onClick={() => handleItemClick("tribes")}
+            >
+              <div className="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  <circle cx="12" cy="16" r="1"></circle>
+                  <circle cx="18" cy="16" r="1"></circle>
+                  <circle cx="6" cy="16" r="1"></circle>
+                </svg>
+              </div>
+              <span className="nav-label">Tribes</span>
+            </div>
+
+            <div 
+              className={`nav-item ${activeItem === "tribalFestival" ? "active" : ""}`}
+              onClick={() => handleItemClick("tribalFestival")}
+            >
+              <div className="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8z"></path>
+                  <path d="M3.29 7 12 12l8.71-5"></path>
+                  <path d="M12 22V12"></path>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+              </div>
+              <span className="nav-label">Tribal Festival</span>
+            </div>
           </>
         )}
       </nav>
