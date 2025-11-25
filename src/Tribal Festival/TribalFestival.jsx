@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import "./TribalFestival.css";
 
 const TribalFestival = () => {
-  const [isFormView, setIsFormView] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingFestival, setEditingFestival] = useState(null);
   const [editingRowId, setEditingRowId] = useState(null);
@@ -93,6 +93,9 @@ const TribalFestival = () => {
       bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tokhü+Emong+Festival"
     }
   ]);
+
+  const navigate = useNavigate();
+  const isAddRoute = Boolean(useMatch("/festival/tribalfestival/add"));
 
   // Handle image upload and compression
   const handleImageUpload = async (e) => {
@@ -217,7 +220,7 @@ const TribalFestival = () => {
 
     // Reset form
     resetForm();
-    setIsFormView(false);
+    navigate("/festival/tribalfestival");
   };
 
   // Reset form
@@ -293,13 +296,13 @@ const TribalFestival = () => {
       </header>
 
       {/* Add Festival Button - Outside Card */}
-      {!isFormView && (
+      {!isAddRoute && (
         <div className="tribal-festival-add-button-container">
           <button
             className="tribal-festival-add-button"
             onClick={() => {
               resetForm();
-              setIsFormView(true);
+              navigate("/festival/tribalfestival/add");
             }}
           >
             Add Festival
@@ -308,7 +311,7 @@ const TribalFestival = () => {
       )}
 
       <div className="tribal-festival-data-container">
-        {!isFormView ? (
+        {!isAddRoute ? (
           <>
             {/* Search */}
             <div className="tribal-festival-control-panel-filters">
@@ -459,7 +462,7 @@ const TribalFestival = () => {
                 className="tribal-festival-back-button"
                 onClick={() => {
                   resetForm();
-                  setIsFormView(false);
+                  navigate("/festival/tribalfestival");
                 }}
               >
                 Back

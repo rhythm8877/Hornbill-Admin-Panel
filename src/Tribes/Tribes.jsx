@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import "./Tribes.css";
 
 const Tribes = () => {
-  const [isFormView, setIsFormView] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingTribe, setEditingTribe] = useState(null);
   const [editingRowId, setEditingRowId] = useState(null);
@@ -82,6 +82,9 @@ const Tribes = () => {
       bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Lotha+Tribe"
     }
   ]);
+
+  const navigate = useNavigate();
+  const isAddRoute = Boolean(useMatch("/festival/tribes/add"));
 
   // Handle image upload and compression
   const handleImageUpload = async (e) => {
@@ -199,7 +202,7 @@ const Tribes = () => {
 
     // Reset form
     resetForm();
-    setIsFormView(false);
+    navigate("/festival/tribes");
   };
 
   // Reset form
@@ -270,13 +273,13 @@ const Tribes = () => {
       </header>
 
       {/* Add Tribe Button - Outside Card */}
-      {!isFormView && (
+      {!isAddRoute && (
         <div className="tribes-add-button-container">
           <button
             className="tribes-add-button"
             onClick={() => {
               resetForm();
-              setIsFormView(true);
+              navigate("/festival/tribes/add");
             }}
           >
             Add Tribe
@@ -285,7 +288,7 @@ const Tribes = () => {
       )}
 
       <div className="tribes-data-container">
-        {!isFormView ? (
+        {!isAddRoute ? (
           <>
             {/* Search */}
             <div className="tribes-control-panel-filters">
@@ -423,7 +426,7 @@ const Tribes = () => {
                 className="tribes-back-button"
                 onClick={() => {
                   resetForm();
-                  setIsFormView(false);
+                  navigate("/festival/tribes");
                 }}
               >
                 Back

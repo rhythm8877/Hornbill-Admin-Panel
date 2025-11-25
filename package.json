@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "browser-image-compression": "^2.0.2",
+    "firebase": "^12.6.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router-dom": "^7.9.6",
     "react-select": "^5.10.1"
   },
   "devDependencies": {

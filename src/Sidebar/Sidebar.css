@@ -101,6 +101,15 @@
   position: relative;
   min-height: 52px;
   overflow: visible !important;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav-item:link,
+.nav-item:visited,
+.nav-item:active {
+  color: inherit;
+  text-decoration: none;
 }
 
 .sidebar.collapsed .nav-item {
@@ -112,6 +121,7 @@
 .nav-item.active {
   background-color: #24B295;
   color: white;
+  text-decoration: none;
 }
 
 .nav-icon {

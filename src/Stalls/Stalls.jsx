@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import "./Stalls.css";
 
 const Stalls = () => {
-  const [isFormView, setIsFormView] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [editingStall, setEditingStall] = useState(null);
   const [editingRowId, setEditingRowId] = useState(null);
@@ -64,6 +64,9 @@ const Stalls = () => {
       permission: ""
     }
   ]);
+
+  const navigate = useNavigate();
+  const isAddRoute = Boolean(useMatch("/festival/stalls/add"));
 
   // Handle file upload and compression
   const handleFileUpload = async (e) => {
@@ -170,7 +173,7 @@ const Stalls = () => {
 
     // Reset form
     resetForm();
-    setIsFormView(false);
+    navigate("/festival/stalls");
   };
 
   // Reset form
@@ -258,13 +261,13 @@ const Stalls = () => {
       </header>
 
       {/* Add Stall Button - Outside Card */}
-      {!isFormView && (
+      {!isAddRoute && (
         <div className="stalls-add-button-container">
           <button
             className="stalls-add-button"
             onClick={() => {
               resetForm();
-              setIsFormView(true);
+              navigate("/festival/stalls/add");
             }}
           >
             Add Stall
@@ -273,7 +276,7 @@ const Stalls = () => {
       )}
 
       <div className="stalls-data-container">
-        {!isFormView ? (
+        {!isAddRoute ? (
           <>
             {/* Search */}
             <div className="stalls-control-panel-filters">
@@ -433,7 +436,7 @@ const Stalls = () => {
                 className="stalls-back-button"
                 onClick={() => {
                   resetForm();
-                  setIsFormView(false);
+                  navigate("/festival/stalls");
                 }}
               >
                 Back

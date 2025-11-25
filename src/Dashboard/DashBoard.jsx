@@ -1,86 +1,37 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import CabsTaxi from "../Cabs & Taxi/CabsTaxi"
-import HotelsGuestHouse from "../Hotels & Guest House/HotelsGuestHouse"
-import Navbar from "../Navbar/Navbar"
-import RestaurantCafe from "../Restaurant & Cafe/RestaurantCafe"
-import ServicesCarousel from "../ServicesCarousel/ServicesCarousel"
-import Sidebar from "../Sidebar/Sidebar"
-import Stalls from "../Stalls/Stalls"
-import TourGuides from "../Tour Guides/TourGuides"
-import TourOperators from "../Tour Operators/TourOperators"
-import TouristSpots from "../Tourist Spots/TouristSpots"
-import TribalFestival from "../Tribal Festival/TribalFestival"
-import Tribes from "../Tribes/Tribes"
-import "./Dashboard.css"
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import Sidebar from "../Sidebar/Sidebar";
+import "./Dashboard.css";
 
 const Dashboard = () => {
-  const [activeSection, setActiveSection] = useState("hotels");
-  const [activeTab, setActiveTab] = useState("Services");
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Set default section based on active tab
-  useEffect(() => {
-    if (activeTab === "Services") {
-      setActiveSection("hotels");
-    } else if (activeTab === "Festival") {
-      setActiveSection("stalls");
-    }
-  }, [activeTab]);
+  const activeTab = location.pathname.startsWith("/festival") ? "Festival" : "Services";
 
-  // Function to handle navigation from sidebar
-  const handleNavigation = (section) => {
-    setActiveSection(section);
-  };
+  const handleTabChange = (tab) => {
+    if (tab === activeTab) return;
 
-  // Render the active component based on the selected section
-  const renderActiveComponent = () => {
-    // Services tab components
-    if (activeTab === "Services") {
-      switch (activeSection) {
-        case "hotels":
-          return <HotelsGuestHouse />;
-        case "tours":
-          return <TourOperators />;
-        case "cabs":
-          return <CabsTaxi />;
-        case "guides":
-          return <TourGuides />;
-        case "restaurants":
-          return <RestaurantCafe />;
-        case "carousel":
-          return <ServicesCarousel />;
-        default:
-          return <HotelsGuestHouse />;
-      }
+    if (tab === "Services") {
+      navigate("/services/hotels&guesthouse");
     } else {
-      // Festival tab components
-      switch (activeSection) {
-        case "stalls":
-          return <Stalls />;
-        case "touristSpots":
-          return <TouristSpots />;
-        case "tribes":
-          return <Tribes />;
-        case "tribalFestival":
-          return <TribalFestival />;
-        default:
-          return <Stalls />;
-      }
+      navigate("/festival/stalls");
     }
   };
 
   return (
     <div className="dashboard-grid">
-      <Sidebar onNavigate={handleNavigation} activeTab={activeTab} />
+      <Sidebar activeTab={activeTab} />
       <div className="content-wrapper">
-        <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
         <main className="main-content">
-          {renderActiveComponent()}
+          <Outlet />
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

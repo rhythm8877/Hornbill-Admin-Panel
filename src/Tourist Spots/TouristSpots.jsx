@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import "./TouristSpots.css";
 
 const TouristSpots = () => {
-  const [isFormView, setIsFormView] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
@@ -138,6 +138,9 @@ const TouristSpots = () => {
       spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Intangki+National+Park"
     }
   ]);
+
+  const navigate = useNavigate();
+  const isAddRoute = Boolean(useMatch("/festival/touristspots/add"));
 
   // Handle image upload and compression
   const handleImageUpload = async (e) => {
@@ -278,7 +281,7 @@ const TouristSpots = () => {
 
     // Reset form
     resetForm();
-    setIsFormView(false);
+    navigate("/festival/touristspots");
   };
 
   // Reset form
@@ -357,13 +360,13 @@ const TouristSpots = () => {
       </header>
 
       {/* Add Tourist Spot Button - Outside Card */}
-      {!isFormView && (
+      {!isAddRoute && (
         <div className="spots-add-button-container">
           <button
             className="spots-add-button"
             onClick={() => {
               resetForm();
-              setIsFormView(true);
+              navigate("/festival/touristspots/add");
             }}
           >
             Add Tourist Spot
@@ -372,7 +375,7 @@ const TouristSpots = () => {
       )}
 
       <div className="spots-data-container">
-        {!isFormView ? (
+        {!isAddRoute ? (
           <>
             {/* Search and Filter */}
             <div className="spots-control-panel-filters">
@@ -475,7 +478,7 @@ const TouristSpots = () => {
                 className="spots-back-button"
                 onClick={() => {
                   resetForm();
-                  setIsFormView(false);
+                  navigate("/festival/touristspots");
                 }}
               >
                 Back

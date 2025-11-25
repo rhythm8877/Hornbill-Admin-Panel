@@ -64,11 +64,13 @@
 }
 
 /* React-select custom styling */
-.carousel-react-select {
+.carousel-react-select,
+.carousel-type-select {
   font-size: 14px;
 }
 
-.carousel-react-select__control {
+.carousel-react-select__control,
+.carousel-type-select__control {
   border: 1px solid var(--carousel-border-color) !important;
   border-radius: 6px !important;
   box-shadow: none !important;
@@ -76,36 +78,47 @@
   min-height: 40px !important;
 }
 
-.carousel-react-select__control:hover {
+.carousel-react-select__control:hover,
+.carousel-type-select__control:hover {
   border-color: var(--carousel-primary-color) !important;
 }
 
-.carousel-react-select__control--is-focused {
+.carousel-react-select__control--is-focused,
+.carousel-type-select__control--is-focused {
   border-color: var(--carousel-primary-color) !important;
 }
 
-.carousel-react-select__indicator-separator {
+.carousel-react-select__indicator-separator,
+.carousel-type-select__indicator-separator {
   background-color: var(--carousel-border-color) !important;
 }
 
-.carousel-react-select__menu {
+.carousel-react-select__menu,
+.carousel-type-select__menu {
   border-radius: 6px !important;
   box-shadow: var(--carousel-shadow) !important;
   z-index: 100 !important;
 }
 
-.carousel-react-select__option {
+.carousel-react-select__option,
+.carousel-type-select__option {
   padding: 10px 12px !important;
   cursor: pointer !important;
 }
 
-.carousel-react-select__option--is-selected {
+.carousel-react-select__option--is-selected,
+.carousel-type-select__option--is-selected {
   background-color: var(--carousel-primary-color) !important;
 }
 
-.carousel-react-select__option--is-focused:not(.carousel-react-select__option--is-selected) {
+.carousel-react-select__option--is-focused:not(.carousel-react-select__option--is-selected),
+.carousel-type-select__option--is-focused:not(.carousel-type-select__option--is-selected) {
   background-color: var(--carousel-primary-light) !important;
   color: var(--carousel-text-color) !important;
+}
+
+.carousel-type-select__value-container {
+  padding: 6px 8px !important;
 }
 
 .carousel-sort-select {
@@ -188,6 +201,22 @@
   border: 1px solid var(--carousel-border-color);
 }
 
+.carousel-status-message {
+  padding: 30px 15px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 15px;
+}
+
+.carousel-error-message {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  background-color: #ffe5e5;
+  color: #c0392b;
+  border: 1px solid #f5b7b1;
+}
+
 .carousel-table th, .carousel-table td {
   padding: 12px 15px;
   text-align: left;
@@ -223,6 +252,12 @@
 .carousel-description-cell {
   min-width: 200px;
   max-width: 300px;
+}
+
+.carousel-type-cell {
+  font-weight: 600;
+  min-width: 110px;
+  text-transform: capitalize;
 }
 
 .carousel-description-text {
@@ -261,6 +296,19 @@
 .carousel-table-image:hover {
   transform: scale(1.1);
   border-color: var(--carousel-primary-color);
+}
+
+.carousel-empty-state {
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+  display: block;
+}
+
+.carousel-muted-text {
+  color: #9da5ad;
+  font-size: 12px;
+  display: block;
 }
 
 .carousel-edit-image-container {
@@ -518,6 +566,13 @@
 
 .carousel-form-submit-button:hover {
   background-color: #1e9a80;
+}
+
+.carousel-form-submit-button:disabled,
+.carousel-save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Image Modal Styles */
