@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./TouristSpots.css";
 
 const TouristSpots = () => {
@@ -95,7 +96,7 @@ const TouristSpots = () => {
       closedDays: [],
       district: "Kohima",
       googleMapsLink: "https://maps.google.com/?q=Dzükou+Valley",
-      spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Dzükou+Valley"
+      spotImage: generatePlaceholderImage(800, 400, "Dzükou Valley"),
     },
     {
       id: 2,
@@ -105,7 +106,7 @@ const TouristSpots = () => {
       closedDays: ["Monday"],
       district: "Kohima",
       googleMapsLink: "https://maps.google.com/?q=Naga+Heritage+Village+Kisama",
-      spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Naga+Heritage+Village"
+      spotImage: generatePlaceholderImage(800, 400, "Naga Heritage Village"),
     },
     {
       id: 3,
@@ -115,7 +116,7 @@ const TouristSpots = () => {
       closedDays: [],
       district: "Dimapur",
       googleMapsLink: "https://maps.google.com/?q=Triple+Falls+Seithekima",
-      spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Triple+Falls"
+      spotImage: generatePlaceholderImage(800, 400, "Triple Falls"),
     },
     {
       id: 4,
@@ -125,7 +126,7 @@ const TouristSpots = () => {
       closedDays: [],
       district: "Phek",
       googleMapsLink: "https://maps.google.com/?q=Shilloi+Lake+Phek",
-      spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Shilloi+Lake"
+      spotImage: generatePlaceholderImage(800, 400, "Shilloi Lake"),
     },
     {
       id: 5,
@@ -135,7 +136,7 @@ const TouristSpots = () => {
       closedDays: ["Tuesday"],
       district: "Peren",
       googleMapsLink: "https://maps.google.com/?q=Intangki+National+Park",
-      spotImage: "https://via.placeholder.com/800x400/24B295/ffffff?text=Intangki+National+Park"
+      spotImage: generatePlaceholderImage(800, 400, "Intangki National Park"),
     }
   ]);
 

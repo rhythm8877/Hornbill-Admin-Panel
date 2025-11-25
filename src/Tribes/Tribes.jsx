@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./Tribes.css";
 
 const Tribes = () => {
@@ -25,61 +26,61 @@ const Tribes = () => {
       id: 1,
       tribe: "Angami",
       description: "The Angami tribe is one of the major Naga tribes in Nagaland, primarily inhabiting the Kohima district. They are known for their rich cultural heritage, traditional festivals like Sekrenyi, and their expertise in terrace cultivation. The Angami people have a strong warrior tradition and are renowned for their beautiful traditional attire and intricate handwoven textiles.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Angami+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Angami Tribe"),
     },
     {
       id: 2,
       tribe: "Ao",
       description: "The Ao tribe is one of the principal tribes of Nagaland, mainly residing in the Mokokchung district. They are known for their vibrant festivals, particularly Moatsü, and their strong educational background. The Ao people have contributed significantly to the modern development of Nagaland and are known for their progressive outlook while maintaining their traditional values.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Ao+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Ao Tribe"),
     },
     {
       id: 3,
       tribe: "Chakhesang",
       description: "The Chakhesang tribe is formed by the amalgamation of three tribes: Chakri, Kheza, and Sangtam. They primarily inhabit the Phek district of Nagaland. Known for their agricultural practices and traditional festivals like Thuni, the Chakhesang people maintain a rich cultural heritage with distinctive customs, traditional dances, and colorful festivals.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Chakhesang+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Chakhesang Tribe"),
     },
     {
       id: 4,
       tribe: "Chang",
       description: "The Chang tribe primarily inhabits the Tuensang district of Nagaland. They are known for their traditional festival Naknyulüm and their skilled craftsmanship in wood carving and metalwork. The Chang people have a strong oral tradition and are known for their folk songs, traditional dances, and their unique cultural practices that have been passed down through generations.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Chang+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Chang Tribe"),
     },
     {
       id: 5,
       tribe: "Garo",
       description: "The Garo tribe is primarily found in Meghalaya, Assam, and parts of Nagaland. They are known for their matrilineal society and their famous Wangala festival, also called the '100 Drums Festival'. The Garo people are skilled in traditional crafts, agriculture, and are known for their vibrant cultural traditions including traditional music and dance forms.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Garo+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Garo Tribe"),
     },
     {
       id: 6,
       tribe: "Kachari",
       description: "The Kachari tribe, also known as Dimasa, primarily inhabits parts of Assam and has presence in neighboring states. They celebrate festivals like Bishu Dima and are known for their agricultural practices and traditional weaving. The Kachari people have a rich cultural heritage with unique customs, traditional attire, and folk traditions.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Kachari+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Kachari Tribe"),
     },
     {
       id: 7,
       tribe: "Khiamniungan",
       description: "The Khiamniungan tribe primarily inhabits the Noklak district of Nagaland and parts of Myanmar. They are known for their traditional festival Tsokum and their unique cultural practices. The Khiamniungan people maintain strong traditional values and are known for their craftsmanship, traditional attire, and their distinctive cultural identity.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Khiamniungan+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Khiamniungan Tribe"),
     },
     {
       id: 8,
       tribe: "Konyak",
       description: "The Konyak tribe is the largest tribe in Nagaland, primarily inhabiting the Mon district. They are known for their traditional festival Aoleang and their historical warrior culture. The Konyak people are famous for their traditional tattoos, headhunting history, and their skilled craftsmanship in wood carving and traditional weapons.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Konyak+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Konyak Tribe"),
     },
     {
       id: 9,
       tribe: "Kuki",
       description: "The Kuki tribe is found across several northeastern states including Manipur, Mizoram, and parts of Nagaland. They celebrate festivals like Mim Kut and Chavang Kut and are known for their traditional music and dance. The Kuki people have a rich oral tradition and are known for their traditional handicrafts and agricultural practices.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Kuki+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Kuki Tribe"),
     },
     {
       id: 10,
       tribe: "Lotha",
       description: "The Lotha tribe primarily inhabits the Wokha district of Nagaland. They are known for their traditional festival Tokhü Emong and their agricultural expertise. The Lotha people maintain strong cultural traditions and are known for their traditional crafts, folk songs, and their distinctive cultural practices that reflect their deep connection with nature.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Lotha+Tribe"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Lotha Tribe"),
     }
   ]);
 

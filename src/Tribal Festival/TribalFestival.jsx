@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./TribalFestival.css";
 
 const TribalFestival = () => {
@@ -27,70 +28,70 @@ const TribalFestival = () => {
       festivalName: "Sekrenyi Festival",
       tribe: "Angami",
       description: "Sekrenyi is a purification festival celebrated by the Angami tribe in February. It is a 10-day festival that symbolizes the purification of the individual and the community. The festival is marked by various rituals, traditional songs, dances, and the preparation of special foods. It serves as a time for the community to come together and strengthen their bonds.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Sekrenyi+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Sekrenyi Festival"),
     },
     {
       id: 2,
       festivalName: "Moatsü Festival",
       tribe: "Ao",
       description: "Moatsü is the most significant festival of the Ao tribe, celebrated in May after the sowing season. The festival lasts for several days and involves various traditional activities including folk songs, dances, and community feasts. It marks the beginning of the agricultural year and is a time for the community to pray for a good harvest.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Moatsü+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Moatsü Festival"),
     },
     {
       id: 3,
       festivalName: "Thuni Festival",
       tribe: "Chakhesang",
       description: "Thuni is a harvest festival celebrated by the Chakhesang tribe in July. The festival is characterized by traditional dances, folk songs, and the sharing of the first fruits of the harvest. It is a time of thanksgiving and celebration, where the community comes together to express gratitude for the bountiful harvest.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Thuni+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Thuni Festival"),
     },
     {
       id: 4,
       festivalName: "Naknyulüm Festival",
       tribe: "Chang",
       description: "Naknyulüm is the main festival of the Chang tribe, celebrated in July. The festival involves various traditional rituals, including the offering of prayers for prosperity and good health. The celebration includes traditional dances, songs, and the preparation of special delicacies. It is a time for the community to come together and celebrate their cultural heritage.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Naknyulüm+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Naknyulüm Festival"),
     },
     {
       id: 5,
       festivalName: "Wangala Festival",
       tribe: "Garo",
       description: "Wangala is a harvest festival celebrated by the Garo tribe in November. Also known as the '100 Drums Festival', it is characterized by traditional drum beats, dances, and songs. The festival is dedicated to Misi-A-Gilpa-Saljong-Galapa, the sun god, and marks the end of the agricultural year. It is a time of thanksgiving and celebration.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Wangala+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Wangala Festival"),
     },
     {
       id: 6,
       festivalName: "Bishu Dima Festival",
       tribe: "Kachari",
       description: "Bishu Dima is the New Year festival of the Kachari tribe, celebrated in April. The festival marks the beginning of the new agricultural year and is characterized by traditional dances, songs, and rituals. The celebration includes the preparation of traditional foods and drinks, and the community comes together to welcome the new year with joy and enthusiasm.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Bishu+Dima+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Bishu Dima Festival"),
     },
     {
       id: 7,
       festivalName: "Tsokum Festival",
       tribe: "Khiamniungan",
       description: "Tsokum is the main festival of the Khiamniungan tribe, celebrated in October. The festival is a time for the community to come together and celebrate their cultural heritage through traditional dances, songs, and rituals. It marks the end of the harvest season and is a time of thanksgiving and celebration.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tsokum+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Tsokum Festival"),
     },
     {
       id: 8,
       festivalName: "Aoleang Festival",
       tribe: "Konyak",
       description: "Aoleang is the most important festival of the Konyak tribe, celebrated in April. The festival marks the beginning of spring and the new agricultural cycle. The celebration includes traditional war dances, folk songs, and the display of traditional weapons and costumes. It is a time for the community to come together and celebrate their warrior heritage.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Aoleang+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Aoleang Festival"),
     },
     {
       id: 9,
       festivalName: "Mim Kut & Chavang Kut",
       tribe: "Kuki",
       description: "Mim Kut and Chavang Kut are important festivals of the Kuki tribe. Mim Kut is celebrated to honor the departed souls, while Chavang Kut is a harvest festival. Both festivals involve traditional dances, songs, and the preparation of special foods. They are times for the community to come together and celebrate their cultural traditions.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Mim+Kut+Chavang+Kut"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Mim Kut Chavang Kut"),
     },
     {
       id: 10,
       festivalName: "Tokhü Emong Festival",
       tribe: "Lotha",
       description: "Tokhü Emong is the most significant festival of the Lotha tribe, celebrated in November. The festival marks the end of the harvest season and the beginning of the winter season. The celebration includes traditional dances, songs, and the sharing of the harvest with the community. It is a time of thanksgiving and celebration.",
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tokhü+Emong+Festival"
+      bannerPhoto: generatePlaceholderImage(800, 400, "Tokhü Emong Festival"),
     }
   ]);
 

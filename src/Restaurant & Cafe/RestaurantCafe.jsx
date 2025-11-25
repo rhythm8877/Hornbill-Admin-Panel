@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Select from "react-select";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./RestaurantCafe.css";
 
 const RestaurantCafe = () => {
@@ -17,137 +18,137 @@ const RestaurantCafe = () => {
   const restaurantData = [
     {
       id: 1,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+1",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 1"),
       name: "Naga Kitchen",
       address: "123 Main Road, City Center",
       phoneNumber: "9876543210",
       district: "Kohima",
       googleMapsLink: "https://maps.google.com/?q=Kohima",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+1",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+2"
+        generatePlaceholderImage(600, 400, "Menu 1"),
+        generatePlaceholderImage(600, 400, "Menu 2")
       ],
       cuisines: ["Naga Cuisines", "North Indian"]
     },
     {
       id: 2,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+2",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 2"),
       name: "Spice Garden",
       address: "456 Hill View, Market Area",
       phoneNumber: "8765432109",
       district: "Dimapur",
       googleMapsLink: "https://maps.google.com/?q=Dimapur",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+3"
+        generatePlaceholderImage(600, 400, "Menu 3")
       ],
       cuisines: ["Vegetarian Only", "South Indian"]
     },
     {
       id: 3,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+3",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 3"),
       name: "Fast Bite Corner",
       address: "789 East Road, Commercial Complex",
       phoneNumber: "7654321098",
       district: "Mokokchung",
       googleMapsLink: "https://maps.google.com/?q=Mokokchung",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+4",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+5",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+6"
+        generatePlaceholderImage(600, 400, "Menu 4"),
+        generatePlaceholderImage(600, 400, "Menu 5"),
+        generatePlaceholderImage(600, 400, "Menu 6")
       ],
       cuisines: ["Fast Food", "Continental"]
     },
     {
       id: 4,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+4",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 4"),
       name: "Mountain View Cafe",
       address: "101 Ridge Road, Hilltop",
       phoneNumber: "6543210987",
       district: "Wokha",
       googleMapsLink: "https://maps.google.com/?q=Wokha",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+7"
+        generatePlaceholderImage(600, 400, "Menu 7")
       ],
       cuisines: ["Continental", "Chinese/Korean Cuisines"]
     },
     {
       id: 5,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+5",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 5"),
       name: "Valley Delights",
       address: "202 Valley Road, Green Valley",
       phoneNumber: "5432109876",
       district: "Phek",
       googleMapsLink: "https://maps.google.com/?q=Phek",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+8",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+9"
+        generatePlaceholderImage(600, 400, "Menu 8"),
+        generatePlaceholderImage(600, 400, "Menu 9")
       ],
       cuisines: ["North Indian", "Naga Cuisines", "Vegetarian Only"]
     },
     {
       id: 6,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+6",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 6"),
       name: "Pine Tree Cafe",
       address: "303 Forest Lane, Pine Forest",
       phoneNumber: "4321098765",
       district: "Tuensang",
       googleMapsLink: "https://maps.google.com/?q=Tuensang",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+10"
+        generatePlaceholderImage(600, 400, "Menu 10")
       ],
       cuisines: ["Chinese/Korean Cuisines", "Fast Food"]
     },
     {
       id: 7,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+7",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 7"),
       name: "Riverside Restaurant",
       address: "404 River Road, River Bank",
       phoneNumber: "3210987654",
       district: "Mon",
       googleMapsLink: "https://maps.google.com/?q=Mon",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+11",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+12"
+        generatePlaceholderImage(600, 400, "Menu 11"),
+        generatePlaceholderImage(600, 400, "Menu 12")
       ],
       cuisines: ["Naga Cuisines", "North Indian", "Continental"]
     },
     {
       id: 8,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+8",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 8"),
       name: "Highland Eatery",
       address: "505 Mountain Pass, Mountain Top",
       phoneNumber: "2109876543",
       district: "Zunheboto",
       googleMapsLink: "https://maps.google.com/?q=Zunheboto",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+13"
+        generatePlaceholderImage(600, 400, "Menu 13")
       ],
       cuisines: ["Vegetarian Only", "South Indian"]
     },
     {
       id: 9,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+9",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 9"),
       name: "Sunset Diner",
       address: "606 West Road, Sunset Hills",
       phoneNumber: "1098765432",
       district: "Kiphire",
       googleMapsLink: "https://maps.google.com/?q=Kiphire",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+14",
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+15"
+        generatePlaceholderImage(600, 400, "Menu 14"),
+        generatePlaceholderImage(600, 400, "Menu 15")
       ],
       cuisines: ["Fast Food", "Chinese/Korean Cuisines"]
     },
     {
       id: 10,
-      bannerPhoto: "https://via.placeholder.com/800x400/24B295/ffffff?text=Restaurant+Banner+10",
+      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 10"),
       name: "Forest Edge Bistro",
       address: "707 Forest Edge, Forest View",
       phoneNumber: "9087654321",
       district: "Peren",
       googleMapsLink: "https://maps.google.com/?q=Peren",
       menuImages: [
-        "https://via.placeholder.com/600x400/24B295/ffffff?text=Menu+16"
+        generatePlaceholderImage(600, 400, "Menu 16")
       ],
       cuisines: ["Continental", "North Indian"]
     }

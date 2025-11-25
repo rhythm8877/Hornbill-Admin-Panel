@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Select from "react-select";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./TourOperators.css";
 
 const TourOperators = () => {
@@ -15,7 +16,7 @@ const TourOperators = () => {
   const tourOperatorData = [
     {
       id: 1,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+1",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 1"),
       businessName: "Nagaland Explorer",
       address: "123 Main Road",
       district: "Kohima",
@@ -26,7 +27,7 @@ const TourOperators = () => {
     },
     {
       id: 2,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+2",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 2"),
       businessName: "Northeast Journeys",
       address: "456 Hill View",
       district: "Dimapur",
@@ -37,7 +38,7 @@ const TourOperators = () => {
     },
     {
       id: 3,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+3",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 3"),
       businessName: "Dzükou Trekkers",
       address: "789 East Road",
       district: "Mokokchung",
@@ -48,7 +49,7 @@ const TourOperators = () => {
     },
     {
       id: 4,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+4",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 4"),
       businessName: "Highland Adventures",
       address: "101 Ridge Road",
       district: "Wokha",
@@ -59,7 +60,7 @@ const TourOperators = () => {
     },
     {
       id: 5,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+5",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 5"),
       businessName: "Nagaland Discovery",
       address: "202 Valley Road",
       district: "Phek",
@@ -70,7 +71,7 @@ const TourOperators = () => {
     },
     {
       id: 6,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+6",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 6"),
       businessName: "Dzükou Valley Expeditions",
       address: "303 Forest Lane",
       district: "Tuensang",
@@ -81,7 +82,7 @@ const TourOperators = () => {
     },
     {
       id: 7,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+7",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 7"),
       businessName: "Northeast Explorer",
       address: "404 River Road",
       district: "Mon",
@@ -92,7 +93,7 @@ const TourOperators = () => {
     },
     {
       id: 8,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+8",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 8"),
       businessName: "Nagaland Trails",
       address: "505 Mountain Pass",
       district: "Zunheboto",
@@ -103,7 +104,7 @@ const TourOperators = () => {
     },
     {
       id: 9,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+9",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 9"),
       businessName: "Dzükou Ventures",
       address: "606 West Road",
       district: "Kiphire",
@@ -114,7 +115,7 @@ const TourOperators = () => {
     },
     {
       id: 10,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Tour+Operator+10",
+      photo: generatePlaceholderImage(800, 400, "Tour Operator 10"),
       businessName: "Northeast Discoveries",
       address: "707 Forest Edge",
       district: "Peren",
