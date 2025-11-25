@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Select from "react-select";
+import { generatePlaceholderImage } from "../utils/placeholderImage";
 import "./HotelsGuestHouse.css";
 
 const HotelsGuestHouse = () => {
@@ -15,7 +16,7 @@ const HotelsGuestHouse = () => {
   const hotelData = [
     {
       id: 1,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+1",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 1"),
       name: "Green Valley Resort",
       address: "123 Main Road",
       townVillage: "Green Hills",
@@ -29,7 +30,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 2,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+2",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 2"),
       name: "Blue Mountain Guest House",
       address: "456 Hill View",
       townVillage: "Pine Valley",
@@ -43,7 +44,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 3,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+3",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 3"),
       name: "Sunrise Hotel",
       address: "789 East Road",
       townVillage: "Sunrise Valley",
@@ -57,7 +58,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 4,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+4",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 4"),
       name: "Mountain View Inn",
       address: "101 Ridge Road",
       townVillage: "Highland",
@@ -71,7 +72,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 5,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+5",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 5"),
       name: "Valley View Resort",
       address: "202 Valley Road",
       townVillage: "Green Valley",
@@ -85,7 +86,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 6,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+6",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 6"),
       name: "Pine Tree Lodge",
       address: "303 Forest Lane",
       townVillage: "Pine Forest",
@@ -99,7 +100,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 7,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+7",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 7"),
       name: "Riverside Retreat",
       address: "404 River Road",
       townVillage: "River Bank",
@@ -113,7 +114,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 8,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+8",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 8"),
       name: "Highland Guest House",
       address: "505 Mountain Pass",
       townVillage: "Mountain Top",
@@ -127,7 +128,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 9,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+9",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 9"),
       name: "Sunset Hotel",
       address: "606 West Road",
       townVillage: "Sunset Hills",
@@ -141,7 +142,7 @@ const HotelsGuestHouse = () => {
     },
     {
       id: 10,
-      photo: "https://via.placeholder.com/800x400/24B295/ffffff?text=Hotel+Image+10",
+      photo: generatePlaceholderImage(800, 400, "Hotel Image 10"),
       name: "Forest Edge Lodge",
       address: "707 Forest Edge",
       townVillage: "Forest View",
