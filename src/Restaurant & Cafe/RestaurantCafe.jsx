@@ -334,6 +334,13 @@ const RestaurantCafe = () => {
                         src={restaurant.bannerPhoto}
                         alt={restaurant.name}
                         className="restaurant-photo"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.display = 'none';
+                          if (e.target.parentNode) {
+                            e.target.parentNode.innerHTML = '<div class="restaurant-photo-placeholder">No Image</div>';
+                          }
+                        }}
                       />
                     </div>
                   </td>
@@ -374,7 +381,15 @@ const RestaurantCafe = () => {
         <div className="restaurant-photo-modal" onClick={() => setShowPhotoModal(false)}>
           <div className="restaurant-photo-modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="restaurant-photo-modal-close" onClick={() => setShowPhotoModal(false)}>&times;</span>
-            <img src={modalPhoto} alt="Restaurant" className="restaurant-modal-photo" />
+            <img 
+              src={modalPhoto} 
+              alt="Restaurant" 
+              className="restaurant-modal-photo"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+              }}
+            />
           </div>
         </div>
       )}
@@ -386,7 +401,16 @@ const RestaurantCafe = () => {
             <span className="restaurant-menu-modal-close" onClick={() => setShowMenuModal(false)}>&times;</span>
             <div className="restaurant-menu-images-grid">
               {modalMenuImages.map((menuImage, index) => (
-                <img key={index} src={menuImage} alt={`Menu ${index + 1}`} className="restaurant-modal-menu-image" />
+                <img 
+                  key={index} 
+                  src={menuImage} 
+                  alt={`Menu ${index + 1}`} 
+                  className="restaurant-modal-menu-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="150"%3E%3Crect width="200" height="150" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999" font-size="12"%3ENo Image%3C/text%3E%3C/svg%3E';
+                  }}
+                />
               ))}
             </div>
           </div>
