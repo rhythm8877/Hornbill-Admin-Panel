@@ -1,117 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import "./CabsTaxi.css";
 
 const CabsTaxi = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSeaterType, setSelectedSeaterType] = useState({ value: "All", label: "All" });
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [modalPhoto, setModalPhoto] = useState("");
+  const [cabData, setCabData] = useState([]);
 
-  // Dummy cab data
-  const cabData = [
-    {
-      id: 1,
-      carModel: "Toyota Innova",
-      address: "123 Main Road, Kohima",
-      driverName: "Rajesh Kumar",
-      phoneNumber: "9876543210",
-      seaterType: "6 seater",
-      drivingLicense: "",
-      districtsServing: ["Kohima", "Dimapur", "Mokokchung"]
-    },
-    {
-      id: 2,
-      carModel: "Maruti Suzuki Swift",
-      address: "456 Hill View, Dimapur",
-      driverName: "Anita Singh",
-      phoneNumber: "8765432109",
-      seaterType: "4 seater",
-      drivingLicense: "",
-      districtsServing: ["Dimapur", "Kohima"]
-    },
-    {
-      id: 3,
-      carModel: "Mahindra Scorpio",
-      address: "789 East Road, Mokokchung",
-      driverName: "Vikram Thapa",
-      phoneNumber: "7654321098",
-      seaterType: "6 seater",
-      drivingLicense: "",
-      districtsServing: ["Mokokchung", "Wokha", "Tuensang"]
-    },
-    {
-      id: 4,
-      carModel: "Hyundai i20",
-      address: "101 Ridge Road, Wokha",
-      driverName: "Priya Sharma",
-      phoneNumber: "6543210987",
-      seaterType: "5 seater",
-      drivingLicense: "",
-      districtsServing: ["Wokha", "Mokokchung"]
-    },
-    {
-      id: 5,
-      carModel: "Tata Nexon",
-      address: "202 Valley Road, Phek",
-      driverName: "Arun Patel",
-      phoneNumber: "5432109876",
-      seaterType: "5 seater",
-      drivingLicense: "",
-      districtsServing: ["Phek", "Kohima", "Kiphire"]
-    },
-    {
-      id: 6,
-      carModel: "Toyota Fortuner",
-      address: "303 Forest Lane, Tuensang",
-      driverName: "Sanjay Gupta",
-      phoneNumber: "4321098765",
-      seaterType: "6 seater",
-      drivingLicense: "",
-      districtsServing: ["Tuensang", "Mon", "Longleng"]
-    },
-    {
-      id: 7,
-      carModel: "Maruti Suzuki Ertiga",
-      address: "404 River Road, Mon",
-      driverName: "Kavita Rao",
-      phoneNumber: "3210987654",
-      seaterType: "6 seater",
-      drivingLicense: "",
-      districtsServing: ["Mon", "Longleng"]
-    },
-    {
-      id: 8,
-      carModel: "Honda City",
-      address: "505 Mountain Pass, Zunheboto",
-      driverName: "Rahul Mehta",
-      phoneNumber: "2109876543",
-      seaterType: "5 seater",
-      drivingLicense: "",
-      districtsServing: ["Zunheboto", "Phek"]
-    },
-    {
-      id: 9,
-      carModel: "Hyundai Creta",
-      address: "606 West Road, Kiphire",
-      driverName: "Neha Verma",
-      phoneNumber: "1098765432",
-      seaterType: "5 seater",
-      drivingLicense: "",
-      districtsServing: ["Kiphire", "Phek", "Tuensang"]
-    },
-    {
-      id: 10,
-      carModel: "Mahindra XUV500",
-      address: "707 Forest Edge, Peren",
-      driverName: "Amit Singh",
-      phoneNumber: "9087654321",
-      seaterType: "6 seater",
-      drivingLicense: "",
-      districtsServing: ["Peren", "Kohima", "Dimapur"]
-    }
-  ];
+  const cabCollection = useMemo(() => collection(db, "taxis"), []);
+
+  useEffect(() => {
+    const cabQuery = query(cabCollection, orderBy("carModel", "asc"));
+    const unsubscribe = onSnapshot(
+      cabQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+
+          const districtFlags = {
+            Dimapur: Boolean(data.isDimapur),
+            Kiphire: Boolean(data.isKiphire),
+            Kohima: Boolean(data.isKohima),
+            Longleng: Boolean(data.isLongleng),
+            Meluri: Boolean(data.isMeluri),
+            Mokokchung: Boolean(data.isMokokchung),
+            Mon: Boolean(data.isMon),
+            Niuland: Boolean(data.isNiuland),
+            Noklak: Boolean(data.isNoklak),
+            Peren: Boolean(data.isPeren),
+            Phek: Boolean(data.isPhek),
+            Shamator: Boolean(data.isShamator),
+            Tseminyü: Boolean(data.isTseminyu),
+            Tuensang: Boolean(data.isTuensang),
+            Wokha: Boolean(data.isWokha),
+            Zünheboto: Boolean(data.isZunheboto)
+          };
+
+          const districtsServing = Object.entries(districtFlags)
+            .filter(([, value]) => value)
+            .map(([label]) => label);
+
+          return {
+            docId: docSnap.id,
+            id: typeof data.id === "number" ? data.id : Date.now(),
+            carModel: data.carModel || "—",
+            address: data.address || "—",
+            driverName: data.driver || "—",
+            phoneNumber: data.phoneNumber || "",
+            seaterType: data.seater || "—",
+            // Driving license image stored in `document` field
+            drivingLicense: data.document || "",
+            districtsServing,
+            isActive: Boolean(data.isActive)
+          };
+        });
+        setCabData(records);
+      },
+      (error) => {
+        console.error("Error fetching taxis:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [cabCollection]);
 
   // Seater type options
   const seaterTypeOptions = [
@@ -141,7 +100,7 @@ const CabsTaxi = () => {
     { value: "Zünheboto", label: "Zünheboto" }
   ];
 
-  // Filter cabs based on search term, seater type and district
+  // Filter cabs based on search term, seater type, district and status
   const filteredCabs = cabData.filter(cab => {
     const matchesSearch = 
       cab.carModel.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -152,9 +111,17 @@ const CabsTaxi = () => {
       cab.seaterType === selectedSeaterType.value;
     
     const matchesDistrict = selectedDistrict.value === "All" || 
-      cab.districtsServing.includes(selectedDistrict.value === "Chumoukedima/Dimapur" ? "Dimapur" : selectedDistrict.value);
+      cab.districtsServing.includes(
+        selectedDistrict.value === "Chumoukedima/Dimapur" ? "Dimapur" : selectedDistrict.value
+      );
+
+    const matchesStatus = selectedStatus.value === "All"
+      ? true
+      : selectedStatus.value === "Active"
+        ? cab.isActive
+        : !cab.isActive;
     
-    return matchesSearch && matchesSeaterType && matchesDistrict;
+    return matchesSearch && matchesSeaterType && matchesDistrict && matchesStatus;
   });
 
   // Custom select styles to match theme
@@ -189,6 +156,33 @@ const CabsTaxi = () => {
           </span>
         ))}
       </div>
+    );
+  };
+
+  // Handle photo modal
+  const handlePhotoClick = (photoUrl) => {
+    setModalPhoto(photoUrl);
+    setShowPhotoModal(true);
+  };
+
+  const handleStatusToggle = async (cab) => {
+    try {
+      const docRef = doc(db, "taxis", cab.docId);
+      await updateDoc(docRef, { isActive: !cab.isActive });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Unable to update cab status. Please try again.");
+    }
+  };
+
+  const renderStatusButton = (cab) => {
+    return (
+      <button
+        className={`cab-status-toggle ${cab.isActive ? "active" : "inactive"}`}
+        onClick={() => handleStatusToggle(cab)}
+      >
+        {cab.isActive ? "Active" : "Inactive"}
+      </button>
     );
   };
 
@@ -247,6 +241,24 @@ const CabsTaxi = () => {
                 />
               </div>
             </div>
+
+            <div className="cab-dropdown-group">
+              <span className="cab-label-text">Status:</span>
+              <div className="cab-select-container">
+                <Select
+                  value={selectedStatus}
+                  onChange={(option) => setSelectedStatus(option)}
+                  options={[
+                    { value: "All", label: "All" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" }
+                  ]}
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  placeholder="Select Status"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -263,25 +275,71 @@ const CabsTaxi = () => {
                 <th>Seater Type</th>
                 <th>Driving License</th>
                 <th>Districts Serving</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredCabs.map((cab, index) => (
-                <tr key={cab.id}>
+                <tr key={cab.docId || cab.id}>
                   <td className="cab-sl-no-cell">{index + 1}</td>
                   <td>{cab.carModel}</td>
                   <td>{cab.address}</td>
                   <td>{cab.driverName}</td>
                   <td>+91-{cab.phoneNumber}</td>
                   <td>{cab.seaterType}</td>
-                  <td>{cab.drivingLicense}</td>
+                  <td>
+                    {cab.drivingLicense ? (
+                      <div
+                        className="cab-photo-container"
+                        onClick={() => handlePhotoClick(cab.drivingLicense)}
+                      >
+                        <img
+                          src={cab.drivingLicense}
+                          alt="Driving License"
+                          className="cab-photo"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = "none";
+                            if (e.target.parentNode) {
+                              e.target.parentNode.innerHTML =
+                                '<div class="cab-photo-placeholder">No Image</div>';
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <span className="cab-muted-text">No document</span>
+                    )}
+                  </td>
                   <td>{renderDistricts(cab.districtsServing)}</td>
+                  <td className="cab-status-cell">{renderStatusButton(cab)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Photo Modal */}
+      {showPhotoModal && (
+        <div className="cab-photo-modal" onClick={() => setShowPhotoModal(false)}>
+          <div className="cab-photo-modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="cab-photo-modal-close" onClick={() => setShowPhotoModal(false)}>
+              &times;
+            </span>
+            <img
+              src={modalPhoto}
+              alt="Driving License"
+              className="cab-modal-photo"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

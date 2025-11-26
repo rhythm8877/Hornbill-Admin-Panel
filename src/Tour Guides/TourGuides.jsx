@@ -1,96 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import "./TourGuides.css";
+import { db } from "../firebaseConfig";
 
 const TourGuides = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [modalPhoto, setModalPhoto] = useState("");
+  const [tourGuideData, setTourGuideData] = useState([]);
 
-  // Dummy tour guide data
-  const tourGuideData = [
-    {
-      id: 1,
-      name: "Rajesh Kumar",
-      address: "123 Main Road, Kohima",
-      district: "Kohima",
-      phoneNumber: "9876543210",
-      ntaIdCard: ""
-    },
-    {
-      id: 2,
-      name: "Anita Singh",
-      address: "456 Hill View, Dimapur",
-      district: "Dimapur",
-      phoneNumber: "8765432109",
-      ntaIdCard: ""
-    },
-    {
-      id: 3,
-      name: "Vikram Thapa",
-      address: "789 East Road, Mokokchung",
-      district: "Mokokchung",
-      phoneNumber: "7654321098",
-      ntaIdCard: ""
-    },
-    {
-      id: 4,
-      name: "Priya Sharma",
-      address: "101 Ridge Road, Wokha",
-      district: "Wokha",
-      phoneNumber: "6543210987",
-      ntaIdCard: ""
-    },
-    {
-      id: 5,
-      name: "Arun Patel",
-      address: "202 Valley Road, Phek",
-      district: "Phek",
-      phoneNumber: "5432109876",
-      ntaIdCard: ""
-    },
-    {
-      id: 6,
-      name: "Sanjay Gupta",
-      address: "303 Forest Lane, Tuensang",
-      district: "Tuensang",
-      phoneNumber: "4321098765",
-      ntaIdCard: ""
-    },
-    {
-      id: 7,
-      name: "Kavita Rao",
-      address: "404 River Road, Mon",
-      district: "Mon",
-      phoneNumber: "3210987654",
-      ntaIdCard: ""
-    },
-    {
-      id: 8,
-      name: "Rahul Mehta",
-      address: "505 Mountain Pass, Zunheboto",
-      district: "Zunheboto",
-      phoneNumber: "2109876543",
-      ntaIdCard: ""
-    },
-    {
-      id: 9,
-      name: "Neha Verma",
-      address: "606 West Road, Kiphire",
-      district: "Kiphire",
-      phoneNumber: "1098765432",
-      ntaIdCard: ""
-    },
-    {
-      id: 10,
-      name: "Amit Singh",
-      address: "707 Forest Edge, Peren",
-      district: "Peren",
-      phoneNumber: "9087654321",
-      ntaIdCard: ""
-    }
-  ];
+  const guideCollection = useMemo(() => collection(db, "tour_guides"), []);
+
+  useEffect(() => {
+    const guideQuery = query(guideCollection, orderBy("fullName", "asc"));
+    const unsubscribe = onSnapshot(
+      guideQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          return {
+            docId: docSnap.id,
+            name: data.fullName || "—",
+            address: data.address || "—",
+            district: data.district || "—",
+            phoneNumber: data.phoneNumber || "",
+            ntaIdCard: data.document || "",
+            isActive: Boolean(data.isActive)
+          };
+        });
+        setTourGuideData(records);
+      },
+      (error) => {
+        console.error("Error fetching tour guides:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [guideCollection]);
 
   // District options
   const districtOptions = [
@@ -112,7 +63,7 @@ const TourGuides = () => {
     { value: "Zünheboto", label: "Zünheboto" }
   ];
 
-  // Filter tour guides based on search term and district
+  // Filter tour guides based on search term, district and status
   const filteredTourGuides = tourGuideData.filter(guide => {
     const matchesSearch = 
       guide.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -120,8 +71,14 @@ const TourGuides = () => {
     
     const matchesDistrict = selectedDistrict.value === "All" || 
       guide.district === (selectedDistrict.value === "Chumoukedima/Dimapur" ? "Dimapur" : selectedDistrict.value);
+
+    const matchesStatus = selectedStatus.value === "All"
+      ? true
+      : selectedStatus.value === "Active"
+        ? guide.isActive
+        : !guide.isActive;
     
-    return matchesSearch && matchesDistrict;
+    return matchesSearch && matchesDistrict && matchesStatus;
   });
 
   // Custom select styles to match theme
@@ -146,6 +103,32 @@ const TourGuides = () => {
     })
   };
 
+  const handlePhotoClick = (photoUrl) => {
+    setModalPhoto(photoUrl);
+    setShowPhotoModal(true);
+  };
+
+  const handleStatusToggle = async (guide) => {
+    try {
+      const docRef = doc(db, "tour_guides", guide.docId);
+      await updateDoc(docRef, { isActive: !guide.isActive });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Unable to update status. Please try again.");
+    }
+  };
+
+  const renderStatusButton = (guide) => {
+    return (
+      <button
+        className={`guide-status-toggle ${guide.isActive ? "active" : "inactive"}`}
+        onClick={() => handleStatusToggle(guide)}
+      >
+        {guide.isActive ? "Active" : "Inactive"}
+      </button>
+    );
+  };
+
   return (
     <div className="guide-container">
       <header>
@@ -155,25 +138,25 @@ const TourGuides = () => {
       <div className="guide-data-container">
         {/* Search and Filters */}
         <div className="guide-control-panel-filters">
-          <div className="guide-filters-row">
-            {/* Search Bar */}
-            <div className="guide-search-container">
-              <div className="guide-search-input-wrapper">
-                <svg className="guide-search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input
-                  type="text"
-                  className="guide-search-input"
-                  placeholder="Search by Tour Guide's Name or Phone Number"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+          {/* Search Bar */}
+          <div className="guide-search-container">
+            <div className="guide-search-input-wrapper">
+              <svg className="guide-search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                className="guide-search-input"
+                placeholder="Search by Tour Guide's Name or Phone Number"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
+          </div>
 
-            {/* District Dropdown */}
+          {/* Dropdown Filters */}
+          <div className="guide-dropdown-container">
             <div className="guide-dropdown-group">
               <span className="guide-label-text">District:</span>
               <div className="guide-select-container">
@@ -184,6 +167,24 @@ const TourGuides = () => {
                   styles={customSelectStyles}
                   isSearchable
                   placeholder="Select District"
+                />
+              </div>
+            </div>
+
+            <div className="guide-dropdown-group">
+              <span className="guide-label-text">Status:</span>
+              <div className="guide-select-container">
+                <Select
+                  value={selectedStatus}
+                  onChange={(option) => setSelectedStatus(option)}
+                  options={[
+                    { value: "All", label: "All" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" }
+                  ]}
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  placeholder="Select Status"
                 />
               </div>
             </div>
@@ -201,23 +202,69 @@ const TourGuides = () => {
                 <th>District</th>
                 <th>Phone Number</th>
                 <th>NTA ID Card</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredTourGuides.map((guide, index) => (
-                <tr key={guide.id}>
+                <tr key={guide.docId || guide.id}>
                   <td className="guide-sl-no-cell">{index + 1}</td>
                   <td>{guide.name}</td>
                   <td>{guide.address}</td>
                   <td>{guide.district}</td>
                   <td>+91-{guide.phoneNumber}</td>
-                  <td>{guide.ntaIdCard}</td>
+                  <td>
+                    {guide.ntaIdCard ? (
+                      <div
+                        className="guide-photo-container"
+                        onClick={() => handlePhotoClick(guide.ntaIdCard)}
+                      >
+                        <img
+                          src={guide.ntaIdCard}
+                          alt="NTA ID Card"
+                          className="guide-photo"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = "none";
+                            if (e.target.parentNode) {
+                              e.target.parentNode.innerHTML =
+                                '<div class="guide-photo-placeholder">No Image</div>';
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <span className="guide-muted-text">No document</span>
+                    )}
+                  </td>
+                  <td className="guide-status-cell">{renderStatusButton(guide)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Photo Modal */}
+      {showPhotoModal && (
+        <div className="guide-photo-modal" onClick={() => setShowPhotoModal(false)}>
+          <div className="guide-photo-modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="guide-photo-modal-close" onClick={() => setShowPhotoModal(false)}>
+              &times;
+            </span>
+            <img
+              src={modalPhoto}
+              alt="NTA ID Card"
+              className="guide-modal-photo"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image Available%3C/text%3E%3C/svg%3E';
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

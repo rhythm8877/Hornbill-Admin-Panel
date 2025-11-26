@@ -1,158 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
-import { generatePlaceholderImage } from "../utils/placeholderImage";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import "./RestaurantCafe.css";
+import { db } from "../firebaseConfig";
 
 const RestaurantCafe = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCuisineType, setSelectedCuisineType] = useState({ value: "All", label: "All" });
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
   const [showMenuModal, setShowMenuModal] = useState(false);
   const [modalMenuImages, setModalMenuImages] = useState([]);
+  const [restaurantData, setRestaurantData] = useState([]);
 
-  // Dummy restaurant data
-  const restaurantData = [
-    {
-      id: 1,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 1"),
-      name: "Naga Kitchen",
-      address: "123 Main Road, City Center",
-      phoneNumber: "9876543210",
-      district: "Kohima",
-      googleMapsLink: "https://maps.google.com/?q=Kohima",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 1"),
-        generatePlaceholderImage(600, 400, "Menu 2")
-      ],
-      cuisines: ["Naga Cuisines", "North Indian"]
-    },
-    {
-      id: 2,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 2"),
-      name: "Spice Garden",
-      address: "456 Hill View, Market Area",
-      phoneNumber: "8765432109",
-      district: "Dimapur",
-      googleMapsLink: "https://maps.google.com/?q=Dimapur",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 3")
-      ],
-      cuisines: ["Vegetarian Only", "South Indian"]
-    },
-    {
-      id: 3,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 3"),
-      name: "Fast Bite Corner",
-      address: "789 East Road, Commercial Complex",
-      phoneNumber: "7654321098",
-      district: "Mokokchung",
-      googleMapsLink: "https://maps.google.com/?q=Mokokchung",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 4"),
-        generatePlaceholderImage(600, 400, "Menu 5"),
-        generatePlaceholderImage(600, 400, "Menu 6")
-      ],
-      cuisines: ["Fast Food", "Continental"]
-    },
-    {
-      id: 4,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 4"),
-      name: "Mountain View Cafe",
-      address: "101 Ridge Road, Hilltop",
-      phoneNumber: "6543210987",
-      district: "Wokha",
-      googleMapsLink: "https://maps.google.com/?q=Wokha",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 7")
-      ],
-      cuisines: ["Continental", "Chinese/Korean Cuisines"]
-    },
-    {
-      id: 5,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 5"),
-      name: "Valley Delights",
-      address: "202 Valley Road, Green Valley",
-      phoneNumber: "5432109876",
-      district: "Phek",
-      googleMapsLink: "https://maps.google.com/?q=Phek",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 8"),
-        generatePlaceholderImage(600, 400, "Menu 9")
-      ],
-      cuisines: ["North Indian", "Naga Cuisines", "Vegetarian Only"]
-    },
-    {
-      id: 6,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 6"),
-      name: "Pine Tree Cafe",
-      address: "303 Forest Lane, Pine Forest",
-      phoneNumber: "4321098765",
-      district: "Tuensang",
-      googleMapsLink: "https://maps.google.com/?q=Tuensang",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 10")
-      ],
-      cuisines: ["Chinese/Korean Cuisines", "Fast Food"]
-    },
-    {
-      id: 7,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 7"),
-      name: "Riverside Restaurant",
-      address: "404 River Road, River Bank",
-      phoneNumber: "3210987654",
-      district: "Mon",
-      googleMapsLink: "https://maps.google.com/?q=Mon",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 11"),
-        generatePlaceholderImage(600, 400, "Menu 12")
-      ],
-      cuisines: ["Naga Cuisines", "North Indian", "Continental"]
-    },
-    {
-      id: 8,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 8"),
-      name: "Highland Eatery",
-      address: "505 Mountain Pass, Mountain Top",
-      phoneNumber: "2109876543",
-      district: "Zunheboto",
-      googleMapsLink: "https://maps.google.com/?q=Zunheboto",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 13")
-      ],
-      cuisines: ["Vegetarian Only", "South Indian"]
-    },
-    {
-      id: 9,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 9"),
-      name: "Sunset Diner",
-      address: "606 West Road, Sunset Hills",
-      phoneNumber: "1098765432",
-      district: "Kiphire",
-      googleMapsLink: "https://maps.google.com/?q=Kiphire",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 14"),
-        generatePlaceholderImage(600, 400, "Menu 15")
-      ],
-      cuisines: ["Fast Food", "Chinese/Korean Cuisines"]
-    },
-    {
-      id: 10,
-      bannerPhoto: generatePlaceholderImage(800, 400, "Restaurant Banner 10"),
-      name: "Forest Edge Bistro",
-      address: "707 Forest Edge, Forest View",
-      phoneNumber: "9087654321",
-      district: "Peren",
-      googleMapsLink: "https://maps.google.com/?q=Peren",
-      menuImages: [
-        generatePlaceholderImage(600, 400, "Menu 16")
-      ],
-      cuisines: ["Continental", "North Indian"]
-    }
-  ];
+  const cafeCollection = useMemo(() => collection(db, "cafes"), []);
+
+  useEffect(() => {
+    const cafeQuery = query(cafeCollection, orderBy("cafeName", "asc"));
+    const unsubscribe = onSnapshot(
+      cafeQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+
+          // Derive cuisines from boolean flags
+          const cuisines = [
+            data.isNagaDishes && "Naga Cuisines",
+            data.isVegetarian && "Vegetarian Only",
+            data.isFastFood && "Fast Food",
+            data.isNorthIndian && "North Indian",
+            data.isSouthIndian && "South Indian",
+            data.isChinese && "Chinese/Korean Cuisines",
+            data.isContinental && "Continental"
+          ].filter(Boolean);
+
+          return {
+            docId: docSnap.id,
+            id: typeof data.id === "number" ? data.id : Date.now(),
+            bannerPhoto: data.photo || "",
+            name: data.cafeName || "—",
+            address: data.address || "—",
+            phoneNumber: data.phoneNumber || "",
+            district: data.district || "—",
+            googleMapsLink: data.gmaps || "",
+            menuImages: Array.isArray(data.menu) ? data.menu : [],
+            cuisines,
+            isActive: Boolean(data.isActive)
+          };
+        });
+        setRestaurantData(records);
+      },
+      (error) => {
+        console.error("Error fetching cafes:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [cafeCollection]);
 
   // Cuisine type options
   const cuisineTypeOptions = [
@@ -198,7 +106,13 @@ const RestaurantCafe = () => {
     const matchesDistrict = selectedDistrict.value === "All" ||
       restaurant.district === selectedDistrict.value;
 
-    return matchesSearch && matchesCuisineType && matchesDistrict;
+    const matchesStatus = selectedStatus.value === "All"
+      ? true
+      : selectedStatus.value === "Active"
+        ? restaurant.isActive
+        : !restaurant.isActive;
+
+    return matchesSearch && matchesCuisineType && matchesDistrict && matchesStatus;
   });
 
   // Handle photo modal
@@ -303,6 +217,24 @@ const RestaurantCafe = () => {
                 />
               </div>
             </div>
+
+            <div className="restaurant-dropdown-group">
+              <span className="restaurant-label-text">Status:</span>
+              <div className="restaurant-select-container">
+                <Select
+                  value={selectedStatus}
+                  onChange={(option) => setSelectedStatus(option)}
+                  options={[
+                    { value: "All", label: "All" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" }
+                  ]}
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  placeholder="Select Status"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -320,11 +252,12 @@ const RestaurantCafe = () => {
                 <th>Google Maps Link</th>
                 <th>Menu Images</th>
                 <th>Cuisines/Dishes</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredRestaurants.map((restaurant, index) => (
-                <tr key={restaurant.id}>
+                <tr key={restaurant.docId || restaurant.id}>
                   <td className="restaurant-sl-no-cell">{index + 1}</td>
                   <td>
                     <div
@@ -370,6 +303,22 @@ const RestaurantCafe = () => {
                     </div>
                   </td>
                   <td>{renderCuisines(restaurant.cuisines)}</td>
+                  <td className="restaurant-status-cell">
+                    <button
+                      className={`restaurant-status-toggle ${restaurant.isActive ? "active" : "inactive"}`}
+                      onClick={async () => {
+                        try {
+                          const docRef = doc(db, "cafes", restaurant.docId);
+                          await updateDoc(docRef, { isActive: !restaurant.isActive });
+                        } catch (error) {
+                          console.error("Error updating cafe status:", error);
+                          alert("Unable to update status. Please try again.");
+                        }
+                      }}
+                    >
+                      {restaurant.isActive ? "Active" : "Inactive"}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
