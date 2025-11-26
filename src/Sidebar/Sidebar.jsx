@@ -67,7 +67,7 @@ const servicesNavItems = [
   },
   {
     to: "/services/carousel",
-    label: "Services Carousel",
+    label: "Carousel",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="10" rx="2" ry="2"></rect>
@@ -78,6 +78,18 @@ const servicesNavItems = [
         <path d="M17 12l-3-3"></path>
         <path d="M7 12l3 3"></path>
         <path d="M7 12l3-3"></path>
+      </svg>
+    )
+  },
+  {
+    to: "/contest",
+    label: "Contest",
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 4h18M7 4v2a4 4 0 0 0 8 0V4"></path>
+        <path d="M5 22h14"></path>
+        <path d="M5 16h14v6H5z"></path>
+        <path d="M12 16v6"></path>
       </svg>
     )
   }
