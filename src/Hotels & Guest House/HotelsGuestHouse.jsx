@@ -1,166 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import Select from "react-select";
-import { generatePlaceholderImage } from "../utils/placeholderImage";
+import { useEffect, useMemo, useState } from "react";
 import "./HotelsGuestHouse.css";
+import { db } from "../firebaseConfig";
 
 const HotelsGuestHouse = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPropertyType, setSelectedPropertyType] = useState({ value: "All", label: "All" });
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
+  const [hotelData, setHotelData] = useState([]);
+  const hotelCollection = useMemo(() => collection(db, "hotels"), []);
 
-  // Dummy hotel data
-  const hotelData = [
-    {
-      id: 1,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 1"),
-      name: "Green Valley Resort",
-      address: "123 Main Road",
-      townVillage: "Green Hills",
-      district: "Kohima",
-      ownerName: "Rajesh Kumar",
-      phoneNumber: "9876543210",
-      propertyType: "Hotel",
-      googleMapsLink: "https://maps.google.com/?q=Kohima",
-      govtId: "",
-      amenities: ["wifi", "fooding", "power backup", "parking"]
-    },
-    {
-      id: 2,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 2"),
-      name: "Blue Mountain Guest House",
-      address: "456 Hill View",
-      townVillage: "Pine Valley",
-      district: "Dimapur",
-      ownerName: "Anita Singh",
-      phoneNumber: "8765432109",
-      propertyType: "Guest House",
-      googleMapsLink: "https://maps.google.com/?q=Dimapur",
-      govtId: "",
-      amenities: ["wifi", "fooding", "air conditioner", "fridge"]
-    },
-    {
-      id: 3,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 3"),
-      name: "Sunrise Hotel",
-      address: "789 East Road",
-      townVillage: "Sunrise Valley",
-      district: "Mokokchung",
-      ownerName: "Vikram Thapa",
-      phoneNumber: "7654321098",
-      propertyType: "Hotel",
-      googleMapsLink: "https://maps.google.com/?q=Mokokchung",
-      govtId: "",
-      amenities: ["wifi", "fooding", "swimming pool", "air conditioner", "parking"]
-    },
-    {
-      id: 4,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 4"),
-      name: "Mountain View Inn",
-      address: "101 Ridge Road",
-      townVillage: "Highland",
-      district: "Wokha",
-      ownerName: "Priya Sharma",
-      phoneNumber: "6543210987",
-      propertyType: "Guest House",
-      googleMapsLink: "https://maps.google.com/?q=Wokha",
-      govtId: "",
-      amenities: ["wifi", "power backup", "parking"]
-    },
-    {
-      id: 5,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 5"),
-      name: "Valley View Resort",
-      address: "202 Valley Road",
-      townVillage: "Green Valley",
-      district: "Phek",
-      ownerName: "Arun Patel",
-      phoneNumber: "5432109876",
-      propertyType: "Hotel",
-      googleMapsLink: "https://maps.google.com/?q=Phek",
-      govtId: "",
-      amenities: ["wifi", "fooding", "swimming pool", "power backup", "air conditioner", "parking", "fridge"]
-    },
-    {
-      id: 6,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 6"),
-      name: "Pine Tree Lodge",
-      address: "303 Forest Lane",
-      townVillage: "Pine Forest",
-      district: "Tuensang",
-      ownerName: "Sanjay Gupta",
-      phoneNumber: "4321098765",
-      propertyType: "Guest House",
-      googleMapsLink: "https://maps.google.com/?q=Tuensang",
-      govtId: "",
-      amenities: ["wifi", "fooding", "power backup"]
-    },
-    {
-      id: 7,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 7"),
-      name: "Riverside Retreat",
-      address: "404 River Road",
-      townVillage: "River Bank",
-      district: "Mon",
-      ownerName: "Kavita Rao",
-      phoneNumber: "3210987654",
-      propertyType: "Hotel",
-      googleMapsLink: "https://maps.google.com/?q=Mon",
-      govtId: "",
-      amenities: ["wifi", "fooding", "power backup", "air conditioner", "parking"]
-    },
-    {
-      id: 8,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 8"),
-      name: "Highland Guest House",
-      address: "505 Mountain Pass",
-      townVillage: "Mountain Top",
-      district: "Zunheboto",
-      ownerName: "Rahul Mehta",
-      phoneNumber: "2109876543",
-      propertyType: "Guest House",
-      googleMapsLink: "https://maps.google.com/?q=Zunheboto",
-      govtId: "",
-      amenities: ["wifi", "fooding", "fridge"]
-    },
-    {
-      id: 9,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 9"),
-      name: "Sunset Hotel",
-      address: "606 West Road",
-      townVillage: "Sunset Hills",
-      district: "Kiphire",
-      ownerName: "Neha Verma",
-      phoneNumber: "1098765432",
-      propertyType: "Hotel",
-      googleMapsLink: "https://maps.google.com/?q=Kiphire",
-      govtId: "",
-      amenities: ["wifi", "fooding", "swimming pool", "power backup", "air conditioner"]
-    },
-    {
-      id: 10,
-      photo: generatePlaceholderImage(800, 400, "Hotel Image 10"),
-      name: "Forest Edge Lodge",
-      address: "707 Forest Edge",
-      townVillage: "Forest View",
-      district: "Peren",
-      ownerName: "Amit Singh",
-      phoneNumber: "9087654321",
-      propertyType: "Guest House",
-      googleMapsLink: "https://maps.google.com/?q=Peren",
-      govtId: "",
-      amenities: ["wifi", "fooding", "power backup", "parking"]
-    }
-  ];
+  useEffect(() => {
+    const hotelQuery = query(hotelCollection, orderBy("hotelName", "asc"));
+    const unsubscribe = onSnapshot(
+      hotelQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          return {
+            docId: docSnap.id,
+            photo: data.photo || "",
+            name: data.hotelName || "—",
+            address: data.address || "—",
+            townVillage: data.town || "—",
+            district: data.district || "—",
+            ownerName: data.owner || "—",
+            phoneNumber: data.phoneNumber || "",
+            propertyType: data.property || "—",
+            googleMapsLink: data.gmaps || "",
+            govtId: data.document || "",
+            amenities: {
+              wifi: Boolean(data.isWifi),
+              fooding: Boolean(data.isFooding),
+              "air conditioner": Boolean(data.isAC),
+              fridge: Boolean(data.isFridge),
+              parking: Boolean(data.isParking),
+              "power backup": Boolean(data.isPowerBackup),
+              "swimming pool": Boolean(data.isSwimming)
+            },
+            isActive: Boolean(data.isActive)
+          };
+        });
+        setHotelData(records);
+      },
+      (error) => {
+        console.error("Error fetching hotels:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [hotelCollection]);
 
   // Property type options
   const propertyTypeOptions = [
     { value: "All", label: "All" },
     { value: "Hotel", label: "Hotel" },
-    { value: "Guest House", label: "Guest House" }
+    { value: "Guest House", label: "Guest House" },
+    { value: "Resort", label: "Resort" }
   ];
 
   // District options
@@ -196,7 +98,13 @@ const HotelsGuestHouse = () => {
     const matchesDistrict = selectedDistrict.value === "All" || 
       hotel.district === selectedDistrict.value;
     
-    return matchesSearch && matchesPropertyType && matchesDistrict;
+    const matchesStatus = selectedStatus.value === "All"
+      ? true
+      : selectedStatus.value === "Active"
+        ? hotel.isActive
+        : !hotel.isActive;
+    
+    return matchesSearch && matchesPropertyType && matchesDistrict && matchesStatus;
   });
 
   // Handle photo modal
@@ -228,15 +136,40 @@ const HotelsGuestHouse = () => {
   };
 
   // Render amenities with icons
-  const renderAmenities = (amenities) => {
+  const renderAmenities = (amenitiesObj = {}) => {
+    const entries = Object.entries(amenitiesObj).filter(([, value]) => value);
+    if (entries.length === 0) {
+      return <span className="hotel-muted-text">No amenities</span>;
+    }
     return (
       <div className="hotel-amenities">
-        {amenities.map((amenity, index) => (
-          <span key={index} className="hotel-amenity-tag">
-            {amenity}
+        {entries.map(([label]) => (
+          <span key={label} className="hotel-amenity-tag">
+            {label}
           </span>
         ))}
       </div>
+    );
+  };
+
+  const handleStatusToggle = async (hotel) => {
+    try {
+      const docRef = doc(db, "hotels", hotel.docId);
+      await updateDoc(docRef, { isActive: !hotel.isActive });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Unable to update hotel status. Please try again.");
+    }
+  };
+
+  const renderStatusButton = (hotel) => {
+    return (
+      <button
+        className={`hotel-status-toggle ${hotel.isActive ? "active" : "inactive"}`}
+        onClick={() => handleStatusToggle(hotel)}
+      >
+        {hotel.isActive ? "Active" : "Inactive"}
+      </button>
     );
   };
 
@@ -295,6 +228,23 @@ const HotelsGuestHouse = () => {
                 />
               </div>
             </div>
+            <div className="hotel-dropdown-group">
+              <span className="hotel-label-text">Status:</span>
+              <div className="hotel-select-container">
+                <Select
+                  value={selectedStatus}
+                  onChange={(option) => setSelectedStatus(option)}
+                  options={[
+                    { value: "All", label: "All" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" }
+                  ]}
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  placeholder="Select status"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -315,11 +265,12 @@ const HotelsGuestHouse = () => {
                 <th>Google Maps Link</th>
                 <th>Govt ID</th>
                 <th>Amenities</th>
+              <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredHotels.map((hotel, index) => (
-                <tr key={hotel.id}>
+                <tr key={hotel.docId || hotel.id}>
                   <td className="hotel-sl-no-cell">{index + 1}</td>
                   <td>
                     <div
@@ -354,11 +305,35 @@ const HotelsGuestHouse = () => {
                       rel="noopener noreferrer"
                       className="hotel-map-link"
                     >
-                      View on Map
+                      {hotel.googleMapsLink ? "View on Map" : "—"}
                     </a>
                   </td>
-                  <td>{hotel.govtId}</td>
+                  <td>
+                    {hotel.govtId ? (
+                      <div
+                        className="hotel-photo-container"
+                        onClick={() => handlePhotoClick(hotel.govtId)}
+                      >
+                        <img
+                          src={hotel.govtId}
+                          alt="Govt Document"
+                          className="hotel-photo"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = "none";
+                            if (e.target.parentNode) {
+                              e.target.parentNode.innerHTML =
+                                '<div class="hotel-photo-placeholder">No Image</div>';
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <span className="hotel-muted-text">No document</span>
+                    )}
+                  </td>
                   <td>{renderAmenities(hotel.amenities)}</td>
+                  <td className="hotel-status-cell">{renderStatusButton(hotel)}</td>
                 </tr>
               ))}
             </tbody>
