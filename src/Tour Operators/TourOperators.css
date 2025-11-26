@@ -87,16 +87,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 40px;
+  gap: 30px;
   flex-wrap: wrap;
   width: 100%;
-  padding-left: 10px;
 }
 
 .tour-dropdown-group {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
 .tour-label-text {
@@ -107,7 +106,12 @@
 }
 
 .tour-select-container {
-  min-width: 220px;
+  min-width: 190px;
+}
+
+.tour-muted-text {
+  color: #9da5ad;
+  font-size: 12px;
 }
 
 .tour-table-container {
@@ -265,7 +269,7 @@
 
   .tour-control-panel-filters {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     align-items: stretch;
   }
 
@@ -276,7 +280,7 @@
 
   .tour-dropdown-container {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     width: 100%;
   }
 
@@ -342,4 +346,28 @@
   .tour-modal-photo {
     max-height: 60vh;
   }
+}
+
+.tour-status-toggle {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.tour-status-toggle.active {
+  background-color: #28a745;
+  color: white;
+}
+
+.tour-status-toggle.inactive {
+  background-color: #dc3545;
+  color: white;
+}
+
+.tour-status-toggle:hover {
+  transform: translateY(-1px);
 }

@@ -1,130 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import Select from "react-select";
-import { generatePlaceholderImage } from "../utils/placeholderImage";
+import { useEffect, useMemo, useState } from "react";
 import "./TourOperators.css";
+import { db } from "../firebaseConfig";
 
 const TourOperators = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedService, setSelectedService] = useState({ value: "All", label: "All" });
   const [selectedDistrict, setSelectedDistrict] = useState({ value: "All", label: "All" });
+  const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
+  const [tourOperatorData, setTourOperatorData] = useState([]);
+  const tourCollection = useMemo(() => collection(db, "tour_operators"), []);
 
-  // Dummy tour operator data
-  const tourOperatorData = [
-    {
-      id: 1,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 1"),
-      businessName: "Nagaland Explorer",
-      address: "123 Main Road",
-      district: "Kohima",
-      ownerName: "Rajesh Kumar",
-      phoneNumber: "9876543210",
-      govtId: "",
-      services: ["Dzükou Valley Tours", "Nagaland Tours"]
-    },
-    {
-      id: 2,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 2"),
-      businessName: "Northeast Journeys",
-      address: "456 Hill View",
-      district: "Dimapur",
-      ownerName: "Anita Singh",
-      phoneNumber: "8765432109",
-      govtId: "",
-      services: ["Northeast Tours"]
-    },
-    {
-      id: 3,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 3"),
-      businessName: "Dzükou Trekkers",
-      address: "789 East Road",
-      district: "Mokokchung",
-      ownerName: "Vikram Thapa",
-      phoneNumber: "7654321098",
-      govtId: "",
-      services: ["Dzükou Valley Tours"]
-    },
-    {
-      id: 4,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 4"),
-      businessName: "Highland Adventures",
-      address: "101 Ridge Road",
-      district: "Wokha",
-      ownerName: "Priya Sharma",
-      phoneNumber: "6543210987",
-      govtId: "",
-      services: ["Nagaland Tours", "Northeast Tours"]
-    },
-    {
-      id: 5,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 5"),
-      businessName: "Nagaland Discovery",
-      address: "202 Valley Road",
-      district: "Phek",
-      ownerName: "Arun Patel",
-      phoneNumber: "5432109876",
-      govtId: "",
-      services: ["Nagaland Tours", "Dzükou Valley Tours", "Northeast Tours"]
-    },
-    {
-      id: 6,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 6"),
-      businessName: "Dzükou Valley Expeditions",
-      address: "303 Forest Lane",
-      district: "Tuensang",
-      ownerName: "Sanjay Gupta",
-      phoneNumber: "4321098765",
-      govtId: "",
-      services: ["Dzükou Valley Tours"]
-    },
-    {
-      id: 7,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 7"),
-      businessName: "Northeast Explorer",
-      address: "404 River Road",
-      district: "Mon",
-      ownerName: "Kavita Rao",
-      phoneNumber: "3210987654",
-      govtId: "",
-      services: ["Northeast Tours"]
-    },
-    {
-      id: 8,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 8"),
-      businessName: "Nagaland Trails",
-      address: "505 Mountain Pass",
-      district: "Zunheboto",
-      ownerName: "Rahul Mehta",
-      phoneNumber: "2109876543",
-      govtId: "",
-      services: ["Nagaland Tours"]
-    },
-    {
-      id: 9,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 9"),
-      businessName: "Dzükou Ventures",
-      address: "606 West Road",
-      district: "Kiphire",
-      ownerName: "Neha Verma",
-      phoneNumber: "1098765432",
-      govtId: "",
-      services: ["Dzükou Valley Tours", "Nagaland Tours"]
-    },
-    {
-      id: 10,
-      photo: generatePlaceholderImage(800, 400, "Tour Operator 10"),
-      businessName: "Northeast Discoveries",
-      address: "707 Forest Edge",
-      district: "Peren",
-      ownerName: "Amit Singh",
-      phoneNumber: "9087654321",
-      govtId: "",
-      services: ["Northeast Tours", "Nagaland Tours"]
-    }
-  ];
+  useEffect(() => {
+    const tourQuery = query(tourCollection, orderBy("businessName", "asc"));
+    const unsubscribe = onSnapshot(
+      tourQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          return {
+            docId: docSnap.id,
+            photo: data.photo || "",
+            businessName: data.businessName || "—",
+            address: data.address || "—",
+            district: data.district || "—",
+            ownerName: data.owner || "—",
+            phoneNumber: data.phoneNumber || "",
+            govtId: data.document || "",
+            services: {
+              "Dzükou Valley Tours": Boolean(data.isDzukoTour),
+              "Nagaland Tours": Boolean(data.isNagalandTour),
+              "Northeast Tours": Boolean(data.isNorthEastTour)
+            },
+            isActive: Boolean(data.isActive)
+          };
+        });
+        setTourOperatorData(records);
+      },
+      (error) => {
+        console.error("Error fetching tour operators:", error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [tourCollection]);
 
   // Service options
   const serviceOptions = [
@@ -162,12 +86,18 @@ const TourOperators = () => {
       operator.phoneNumber.includes(searchTerm);
     
     const matchesService = selectedService.value === "All" || 
-      operator.services.includes(selectedService.value);
+      operator.services[selectedService.value];
     
     const matchesDistrict = selectedDistrict.value === "All" || 
       operator.district === selectedDistrict.value;
+
+    const matchesStatus = selectedStatus.value === "All"
+      ? true
+      : selectedStatus.value === "Active"
+        ? operator.isActive
+        : !operator.isActive;
     
-    return matchesSearch && matchesService && matchesDistrict;
+    return matchesSearch && matchesService && matchesDistrict && matchesStatus;
   });
 
   // Handle photo modal
@@ -199,15 +129,40 @@ const TourOperators = () => {
   };
 
   // Render services with tags
-  const renderServices = (services) => {
+  const renderServices = (servicesObj = {}) => {
+    const entries = Object.entries(servicesObj).filter(([, value]) => value);
+    if (entries.length === 0) {
+      return <span className="tour-muted-text">No services</span>;
+    }
     return (
       <div className="tour-services">
-        {services.map((service, index) => (
-          <span key={index} className="tour-service-tag">
+        {entries.map(([service]) => (
+          <span key={service} className="tour-service-tag">
             {service}
           </span>
         ))}
       </div>
+    );
+  };
+
+  const handleStatusToggle = async (operator) => {
+    try {
+      const docRef = doc(db, "tour_operators", operator.docId);
+      await updateDoc(docRef, { isActive: !operator.isActive });
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Unable to update status. Please try again.");
+    }
+  };
+
+  const renderStatusButton = (operator) => {
+    return (
+      <button
+        className={`tour-status-toggle ${operator.isActive ? "active" : "inactive"}`}
+        onClick={() => handleStatusToggle(operator)}
+      >
+        {operator.isActive ? "Active" : "Inactive"}
+      </button>
     );
   };
 
@@ -266,6 +221,24 @@ const TourOperators = () => {
                 />
               </div>
             </div>
+
+            <div className="tour-dropdown-group">
+              <span className="tour-label-text">Status:</span>
+              <div className="tour-select-container">
+                <Select
+                  value={selectedStatus}
+                  onChange={(option) => setSelectedStatus(option)}
+                  options={[
+                    { value: "All", label: "All" },
+                    { value: "Active", label: "Active" },
+                    { value: "Inactive", label: "Inactive" }
+                  ]}
+                  styles={customSelectStyles}
+                  isSearchable={false}
+                  placeholder="Select Status"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -283,11 +256,12 @@ const TourOperators = () => {
                 <th>Phone Number</th>
                 <th>Govt ID</th>
                 <th>Services</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredTourOperators.map((operator, index) => (
-                <tr key={operator.id}>
+                <tr key={operator.docId || operator.id}>
                   <td className="tour-sl-no-cell">{index + 1}</td>
                   <td>
                     <div
@@ -313,8 +287,31 @@ const TourOperators = () => {
                   <td>{operator.district}</td>
                   <td>{operator.ownerName}</td>
                   <td>+91-{operator.phoneNumber}</td>
-                  <td>{operator.govtId}</td>
+                  <td>
+                    {operator.govtId ? (
+                      <div
+                        className="tour-photo-container"
+                        onClick={() => handlePhotoClick(operator.govtId)}
+                      >
+                        <img
+                          src={operator.govtId}
+                          alt="Govt Document"
+                          className="tour-photo"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.style.display = 'none';
+                            if (e.target.parentNode) {
+                              e.target.parentNode.innerHTML = '<div class="tour-photo-placeholder">No Image</div>';
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <span className="tour-muted-text">No document</span>
+                    )}
+                  </td>
                   <td>{renderServices(operator.services)}</td>
+                  <td className="tour-status-cell">{renderStatusButton(operator)}</td>
                 </tr>
               ))}
             </tbody>
