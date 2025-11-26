@@ -31,7 +31,11 @@ const App = () => {
           <Route path="restaurants&cafes" element={<RestaurantCafe />} />
           <Route path="carousel">
             <Route index element={<ServicesCarousel />} />
-            <Route path="addslides" element={<ServicesCarousel />} />
+            <Route path="add" element={<ServicesCarousel />} />
+          </Route>
+          <Route path="contest">
+            <Route index element={<Contest />} />
+            <Route path="add" element={<Contest />} />
           </Route>
         </Route>
 
@@ -54,11 +58,6 @@ const App = () => {
             <Route index element={<TribalFestival />} />
             <Route path="add" element={<TribalFestival />} />
           </Route>
-        </Route>
-
-        <Route path="contest">
-          <Route index element={<Contest />} />
-          <Route path="add" element={<Contest />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/services/hotels&guesthouse" replace />} />

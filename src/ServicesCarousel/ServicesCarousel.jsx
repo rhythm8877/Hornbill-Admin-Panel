@@ -36,7 +36,7 @@ const ServicesCarousel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataError, setDataError] = useState("");
   const navigate = useNavigate();
-  const isAddSlideRoute = Boolean(useMatch("/services/carousel/addslides"));
+  const isAddSlideRoute = Boolean(useMatch("/services/carousel/add"));
   const carouselCollection = collection(db, "carousel");
 
   useEffect(() => {
@@ -306,7 +306,7 @@ const ServicesCarousel = () => {
             className="carousel-add-button"
             onClick={() => {
               resetForm();
-              navigate("/services/carousel/addslides");
+              navigate("/services/carousel/add");
             }}
           >
             Add Slide

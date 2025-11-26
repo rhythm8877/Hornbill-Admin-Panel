@@ -58,7 +58,7 @@ const Contest = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
-  const isAddRoute = Boolean(useMatch("/contest/add"));
+  const isAddRoute = Boolean(useMatch("/services/contest/add"));
   const contestCollection = useMemo(() => collection(db, "contests"), []);
 
   useEffect(() => {
@@ -349,7 +349,7 @@ const Contest = () => {
             className="contest-add-button"
             onClick={() => {
               resetForm();
-              navigate("/contest/add");
+              navigate("/services/contest/add");
             }}
           >
             Add Slide
@@ -623,7 +623,7 @@ const Contest = () => {
               className="contest-back-button"
               onClick={() => {
                 resetForm();
-                navigate("/contest");
+                navigate("/services/contest");
               }}
             >
               Back
