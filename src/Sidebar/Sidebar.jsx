@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const servicesNavItems = [
@@ -150,7 +150,16 @@ const festivalNavItems = [
 
 const Sidebar = ({ activeTab = "Services" }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const navigate = useNavigate();
   const menuItems = activeTab === "Festival" ? festivalNavItems : servicesNavItems;
+
+  const handleLogout = () => {
+    // Clear authentication
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userEmail");
+    // Navigate to login page
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
@@ -184,6 +193,19 @@ const Sidebar = ({ activeTab = "Services" }) => {
           </NavLink>
         ))}
       </nav>
+
+      <div className="logout-container">
+        <button className="logout-button" onClick={handleLogout}>
+          <div className="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </div>
+          <span className="nav-label">Logout</span>
+        </button>
+      </div>
     </div>
   );
 };

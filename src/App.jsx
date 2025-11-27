@@ -2,6 +2,8 @@
 
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Login from "./Login/Login";
+import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./Dashboard/DashBoard";
 import CabsTaxi from "./Cabs & Taxi/CabsTaxi";
 import HotelsGuestHouse from "./Hotels & Guest House/HotelsGuestHouse";
@@ -18,7 +20,18 @@ import Tribes from "./Tribes/Tribes";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />}>
+      {/* Login route - accessible without authentication */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Protected routes - require authentication */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="/services/hotels&guesthouse" replace />} />
 
         {/* Services routes */}
@@ -62,6 +75,18 @@ const App = () => {
 
         <Route path="*" element={<Navigate to="/services/hotels&guesthouse" replace />} />
       </Route>
+
+      {/* Redirect root to login if not authenticated, or to dashboard if authenticated */}
+      <Route
+        path="*"
+        element={
+          localStorage.getItem("isAuthenticated") === "true" ? (
+            <Navigate to="/services/hotels&guesthouse" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
     </Routes>
   );
 };

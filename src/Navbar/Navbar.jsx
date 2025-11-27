@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import "./Navbar.css";
 
 const Navbar = ({ activeTab = "Services", onTabChange }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
   const handleTabClick = (tab) => {
     if (tab === activeTab) return;
     if (onTabChange) {
@@ -50,47 +47,6 @@ const Navbar = ({ activeTab = "Services", onTabChange }) => {
               </svg>
             </button>
             <input type="text" placeholder="Search..." />
-          </div>
-
-          <div className="navbar-profile">
-            <div
-              className="profile-dropdown"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <div className="profile-avatar">
-                <span>A</span>
-              </div>
-              <span className="profile-name">Admin</span>
-              <svg
-                className="dropdown-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <a href="#" className="dropdown-item">
-                    Profile
-                  </a>
-                  <a href="#" className="dropdown-item">
-                    Settings
-                  </a>
-                  <div className="dropdown-divider"></div>
-                  <a href="#" className="dropdown-item">
-                    Logout
-                  </a>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>
