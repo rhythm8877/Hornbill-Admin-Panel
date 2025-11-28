@@ -148,65 +148,97 @@ const festivalNavItems = [
   }
 ];
 
-const Sidebar = ({ activeTab = "Services" }) => {
+const Sidebar = ({
+  activeTab = "Services",
+  isMobile = false,
+  isMobileOpen = true,
+  onMobileClose
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
   const menuItems = activeTab === "Festival" ? festivalNavItems : servicesNavItems;
 
   const handleLogout = () => {
-    // Clear authentication
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("userEmail");
-    // Navigate to login page
     navigate("/login", { replace: true });
+    if (isMobile && onMobileClose) {
+      onMobileClose();
+    }
   };
 
+  const handleNavClick = () => {
+    if (isMobile && onMobileClose) {
+      onMobileClose();
+    }
+  };
+
+  const sidebarClasses = [
+    "sidebar",
+    isCollapsed ? "collapsed" : "",
+    isMobile ? "mobile" : "",
+    isMobile ? (isMobileOpen ? "mobile-open" : "mobile-closed") : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
-      <div className="sidebar-header">
-        <div className="logo-container">
-          <div className="logo-text">
-            <span className="college-name">Hornbill</span>
-            <span className="college-type">Admin Panel</span>
+    <>
+      {isMobile && (
+        <div
+          className={`sidebar-backdrop ${isMobileOpen ? "show" : ""}`}
+          onClick={onMobileClose}
+        />
+      )}
+      <div className={sidebarClasses}>
+        <div className="sidebar-header">
+          <div className="logo-container">
+            <div className="logo-text">
+              <span className="college-name">Hornbill</span>
+              <span className="college-type">Admin Panel</span>
+            </div>
           </div>
+          {!isMobile && (
+            <button className="collapse-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {isCollapsed ? (
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                ) : (
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                )}
+              </svg>
+            </button>
+          )}
         </div>
-        <button className="collapse-btn" onClick={() => setIsCollapsed(!isCollapsed)}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            {isCollapsed ? (
-              <polyline points="9 18 15 12 9 6"></polyline>
-            ) : (
-              <polyline points="15 18 9 12 15 6"></polyline>
-            )}
-          </svg>
-        </button>
-      </div>
 
-      <nav className="nav-menu">
-        {menuItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          >
-            <div className="nav-icon">{item.icon}</div>
-            <span className="nav-label">{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
+        <nav className="nav-menu">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+              onClick={handleNavClick}
+            >
+              <div className="nav-icon">{item.icon}</div>
+              <span className="nav-label">{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
 
-      <div className="logout-container">
-        <button className="logout-button" onClick={handleLogout}>
-          <div className="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
-          </div>
-          <span className="nav-label">Logout</span>
-        </button>
+        <div className="logout-container">
+          <button className="logout-button" onClick={handleLogout}>
+            <div className="nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </div>
+            <span className="nav-label">Logout</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -25,6 +25,24 @@
   margin: 0 auto;
 }
 
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  margin-right: 1rem;
+}
+
+.navbar-hamburger span {
+  width: 22px;
+  height: 2px;
+  background-color: var(--navbar-text);
+  border-radius: 999px;
+}
+
 /* Tabs */
 .navbar-tabs {
   display: flex;
@@ -257,5 +275,24 @@
   .navbar-tab {
     padding: 0.5rem 0.75rem;
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar-hamburger {
+    display: flex;
+  }
+
+  .navbar-container {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+
+  .navbar-tabs {
+    flex: 1;
+  }
+
+  .navbar-right {
+    margin-left: auto;
   }
 }

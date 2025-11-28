@@ -6,11 +6,20 @@
   transition: grid-template-columns 0.3s ease;
 }
 
+.dashboard-grid.dashboard-mobile {
+  grid-template-columns: 1fr;
+}
+
 .content-wrapper {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+}
+
+.dashboard-mobile .content-wrapper {
+  height: auto;
+  min-height: 100vh;
 }
 
 .main-content {

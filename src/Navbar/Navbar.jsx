@@ -2,7 +2,7 @@
 
 import "./Navbar.css";
 
-const Navbar = ({ activeTab = "Services", onTabChange }) => {
+const Navbar = ({ activeTab = "Services", onTabChange, onMenuToggle }) => {
   const handleTabClick = (tab) => {
     if (tab === activeTab) return;
     if (onTabChange) {
@@ -13,6 +13,16 @@ const Navbar = ({ activeTab = "Services", onTabChange }) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        <button
+          className="navbar-hamburger"
+          onClick={() => onMenuToggle?.()}
+          aria-label="Toggle menu"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
         <div className="navbar-tabs">
           <div
             className={`navbar-tab ${activeTab === "Services" ? "active" : ""}`}
