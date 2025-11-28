@@ -13,8 +13,14 @@ const HotelsGuestHouse = () => {
   const [selectedStatus, setSelectedStatus] = useState({ value: "All", label: "All" });
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
+  const [roomsData, setRoomsData] = useState([]);
+  const [showRoomsModal, setShowRoomsModal] = useState(false);
+  const [selectedHotelInfo, setSelectedHotelInfo] = useState({ hotel: null, rooms: [] });
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [activeRoomImageIdx, setActiveRoomImageIdx] = useState(0);
   const [hotelData, setHotelData] = useState([]);
   const hotelCollection = useMemo(() => collection(db, "hotels"), []);
+  const roomsCollection = useMemo(() => collection(db, "rooms"), []);
 
   useEffect(() => {
     const hotelQuery = query(hotelCollection, orderBy("hotelName", "asc"));
@@ -26,6 +32,7 @@ const HotelsGuestHouse = () => {
           return {
             docId: docSnap.id,
             photo: data.photo || "",
+            hotelId: data.hotelID || docSnap.id,
             name: data.hotelName || "—",
             address: data.address || "—",
             townVillage: data.town || "—",
@@ -56,6 +63,48 @@ const HotelsGuestHouse = () => {
 
     return () => unsubscribe();
   }, [hotelCollection]);
+
+  useEffect(() => {
+    const roomsQuery = query(roomsCollection, orderBy("roomTitle", "asc"));
+    const unsubscribeRooms = onSnapshot(
+      roomsQuery,
+      (snapshot) => {
+        const rooms = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          return {
+            docId: docSnap.id,
+            hotelId: data.hotelID || "",
+            roomTitle: data.roomTitle || "—",
+            roomType: data.roomType || "—",
+            images: Array.isArray(data.images)
+              ? data.images
+              : data.image
+                ? [data.image]
+                : [],
+            seater: data.seater || data.capacity || "—",
+            price: typeof data.price === "number" ? data.price : data.price ? Number(data.price) : null,
+            extraPersonCharges:
+              typeof data.extraPersonCharges === "number"
+                ? data.extraPersonCharges
+                : data.extraPersonCharges
+                  ? Number(data.extraPersonCharges)
+                  : null,
+            amenities: data.amenities || null
+          };
+        });
+        setRoomsData(rooms);
+      },
+      (error) => {
+        console.error("Error fetching rooms:", error);
+      }
+    );
+
+    return () => unsubscribeRooms();
+  }, [roomsCollection]);
+
+  useEffect(() => {
+    setActiveRoomImageIdx(0);
+  }, [selectedRoom]);
 
   // Property type options
   const propertyTypeOptions = [
@@ -171,6 +220,43 @@ const HotelsGuestHouse = () => {
         {hotel.isActive ? "Active" : "Inactive"}
       </button>
     );
+  };
+
+  const handleHotelNameClick = (hotel) => {
+    const hotelRooms = roomsData.filter((room) => room.hotelId === hotel.hotelId);
+    const defaultRoom = hotelRooms[0] || null;
+    setSelectedHotelInfo({
+      hotel,
+      rooms: hotelRooms
+    });
+    setSelectedRoom(defaultRoom);
+    setActiveRoomImageIdx(0);
+    setShowRoomsModal(true);
+  };
+
+  const closeRoomsModal = () => {
+    setShowRoomsModal(false);
+    setSelectedRoom(null);
+    setActiveRoomImageIdx(0);
+  };
+
+  const highlightRoom = selectedRoom || selectedHotelInfo.rooms[0];
+  const highlightImages = highlightRoom?.images?.length ? highlightRoom.images : [];
+  const mainImage = highlightImages[activeRoomImageIdx] ?? highlightImages[0] ?? null;
+
+  const formatCurrency = (value) => {
+    if (typeof value === "number" && !Number.isNaN(value)) {
+      return `₹${value.toLocaleString("en-IN")}`;
+    }
+    return "—";
+  };
+
+  const formatSeater = (value) => {
+    if (!value) return "—";
+    if (typeof value === "number") {
+      return `${value} ${value === 1 ? "Person" : "People"}`;
+    }
+    return value;
   };
 
   return (
@@ -291,7 +377,14 @@ const HotelsGuestHouse = () => {
                       />
                     </div>
                   </td>
-                  <td>{hotel.name}</td>
+                  <td>
+                    <button
+                      className="hotel-name-link"
+                      onClick={() => handleHotelNameClick(hotel)}
+                    >
+                      {hotel.name}
+                    </button>
+                  </td>
                   <td>{hotel.address}</td>
                   <td>{hotel.townVillage}</td>
                   <td>{hotel.district}</td>
@@ -355,6 +448,135 @@ const HotelsGuestHouse = () => {
                 e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23f0f0f0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%23999"%3ENo Image Available%3C/text%3E%3C/svg%3E';
               }}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Rooms Modal */}
+      {showRoomsModal && (
+        <div className="hotel-rooms-modal" onClick={closeRoomsModal}>
+          <div className="hotel-rooms-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="hotel-rooms-modal-header">
+              <div>
+                <h3>{selectedHotelInfo.hotel?.name || "Hotel"}</h3>
+                <p>
+                  {selectedHotelInfo.hotel?.address}
+                  {selectedHotelInfo.hotel?.district ? `, ${selectedHotelInfo.hotel.district}` : ""}
+                </p>
+              </div>
+              <button className="hotel-rooms-modal-close" onClick={closeRoomsModal}>
+                &times;
+              </button>
+            </div>
+
+            {highlightRoom ? (
+              <>
+                <div className="hotel-room-highlight">
+                  <div className="hotel-room-highlight-media">
+                    {mainImage ? (
+                      <img
+                        src={mainImage}
+                        alt={highlightRoom.roomTitle}
+                        className="hotel-room-highlight-main"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="hotel-room-highlight-placeholder">No image available</div>
+                    )}
+                    {highlightImages.length > 1 && (
+                      <div className="hotel-room-highlight-thumbs">
+                        {highlightImages.map((imgUrl, idx) => (
+                          <button
+                            type="button"
+                            key={`${highlightRoom.docId}-thumb-${idx}`}
+                            className={`hotel-room-highlight-thumb ${idx === activeRoomImageIdx ? "active" : ""}`}
+                            onClick={() => setActiveRoomImageIdx(idx)}
+                          >
+                            <img src={imgUrl} alt={`${highlightRoom.roomTitle} ${idx + 1}`} />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="hotel-room-highlight-details">
+                    <div className="hotel-room-highlight-title-row">
+                      <h4>{highlightRoom.roomTitle}</h4>
+                      {highlightRoom.roomType && (
+                        <span className="hotel-room-type">{highlightRoom.roomType}</span>
+                      )}
+                    </div>
+                    <p className="hotel-room-highlight-capacity">{formatSeater(highlightRoom.seater)}</p>
+                    <div className="hotel-room-highlight-pricing">
+                      <div>
+                        <p className="hotel-room-price-label">Price</p>
+                        <p className="hotel-room-price">{formatCurrency(highlightRoom.price)}</p>
+                      </div>
+                      <div>
+                        <p className="hotel-room-price-label">Extra Person</p>
+                        <p className="hotel-room-price">{formatCurrency(highlightRoom.extraPersonCharges)}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedHotelInfo.rooms.length > 1 && (
+                  <div className="hotel-room-selector-grid">
+                    {selectedHotelInfo.rooms.map((room) => {
+                      const thumb = room.images && room.images.length > 0 ? room.images[0] : null;
+                      const isSelected = selectedRoom?.docId === room.docId;
+                      return (
+                        <button
+                          type="button"
+                          key={room.docId}
+                          className={`hotel-room-selector-card ${isSelected ? "selected" : ""}`}
+                          onClick={() => setSelectedRoom(room)}
+                        >
+                          <div className="hotel-room-selector-thumb">
+                            {thumb ? (
+                              <img
+                                src={thumb}
+                                alt={`${room.roomTitle} thumbnail`}
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.style.display = "none";
+                                  if (
+                                    e.target.parentNode &&
+                                    !e.target.parentNode.querySelector(".hotel-room-selector-thumb-placeholder")
+                                  ) {
+                                    e.target.parentNode.innerHTML =
+                                      '<div class="hotel-room-selector-thumb-placeholder">No Image</div>';
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <div className="hotel-room-selector-thumb-placeholder">No Image</div>
+                            )}
+                          </div>
+                          <div className="hotel-room-selector-info">
+                            <div className="hotel-room-selector-title-row">
+                              <p className="hotel-room-selector-title">{room.roomTitle}</p>
+                              {room.roomType && <span className="hotel-room-type">{room.roomType}</span>}
+                            </div>
+                            <p className="hotel-room-selector-meta">{formatSeater(room.seater)}</p>
+                            <div className="hotel-room-selector-price-row">
+                              <span>{formatCurrency(room.price)}</span>
+                              <span className="hotel-room-selector-price-label">
+                                Extra {formatCurrency(room.extraPersonCharges)}
+                              </span>
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="hotel-rooms-empty">No rooms have been added for this hotel yet.</div>
+            )}
           </div>
         </div>
       )}
