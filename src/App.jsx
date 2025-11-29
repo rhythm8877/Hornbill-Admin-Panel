@@ -17,6 +17,7 @@ import TourOperators from "./Tour Operators/TourOperators";
 import TouristSpots from "./Tourist Spots/TouristSpots";
 import TribalFestival from "./Tribal Festival/TribalFestival";
 import Tribes from "./Tribes/Tribes";
+import Hornbill from "./Hornbill/Hornbill";
 
 const App = () => {
   return (
@@ -75,6 +76,10 @@ const App = () => {
           <Route path="tribalfestival">
             <Route index element={<TribalFestival />} />
             <Route path="add" element={<TribalFestival />} />
+          </Route>
+          <Route path="hornbill">
+            <Route index element={<Hornbill />} />
+            <Route path="add" element={<Hornbill />} />
           </Route>
         </Route>
 
