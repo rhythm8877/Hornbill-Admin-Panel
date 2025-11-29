@@ -1,0 +1,462 @@
+:root {
+  --landmark-primary-color: #24B295;
+  --landmark-primary-light: #e5f7f3;
+  --landmark-secondary-color: #f8f9fa;
+  --landmark-border-color: #c9ede7;
+  --landmark-text-color: #333;
+  --landmark-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.landmark-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.landmark-container header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.landmark-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--landmark-primary-color);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.landmark-data-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--landmark-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.landmark-control-panel-filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.landmark-search-container {
+  flex: 1;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.landmark-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.landmark-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+.landmark-search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  font-size: 14px;
+  border: 1px solid var(--landmark-border-color);
+  border-radius: 6px;
+  outline: none;
+  background-color: var(--landmark-secondary-color);
+}
+
+.landmark-search-input:focus {
+  border-color: var(--landmark-primary-color);
+  box-shadow: 0 0 0 2px rgba(36, 178, 149, 0.1);
+}
+
+.landmark-dropdown-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.landmark-dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landmark-label-text {
+  font-weight: 600;
+  color: var(--landmark-primary-color);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.landmark-select-container {
+  min-width: 190px;
+}
+
+.landmark-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.landmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+  font-size: 14px;
+  border: 1px solid var(--landmark-border-color);
+}
+
+.landmark-table th, .landmark-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid var(--landmark-border-color);
+  min-width: 100px;
+  vertical-align: top;
+}
+
+.landmark-table th {
+  background-color: var(--landmark-primary-light);
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+  color: black;
+}
+
+.landmark-table td {
+  text-align: left;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.landmark-sl-no-header, .landmark-sl-no-cell {
+  min-width: 60px !important;
+  max-width: 80px !important;
+  width: 60px !important;
+}
+
+.landmark-image-cell {
+  width: 120px;
+  text-align: center;
+}
+
+.landmark-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.landmark-table-image {
+  width: 100px;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 2px solid var(--landmark-border-color);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.landmark-table-image:hover {
+  transform: scale(1.1);
+  border-color: var(--landmark-primary-color);
+}
+
+.landmark-photo-placeholder {
+  width: 100px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 2px solid var(--landmark-border-color);
+  border-radius: 4px;
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+}
+
+.landmark-edit-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.landmark-empty-state {
+  font-size: 12px;
+  color: #718096;
+}
+
+.landmark-image-edit-hint {
+  font-size: 12px;
+  color: var(--landmark-primary-color);
+}
+
+.landmark-inline-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cbd5f5;
+  border-radius: 6px;
+  font-size: 13px;
+  background-color: #f8f9fa;
+}
+
+.landmark-inline-input:focus {
+  outline: none;
+  border-color: var(--landmark-primary-color);
+  box-shadow: 0 0 0 2px rgba(36, 178, 149, 0.1);
+}
+
+.landmark-action-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.landmark-action-buttons button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #fff;
+}
+
+.landmark-edit-button,
+.landmark-save-button {
+  background-color: var(--landmark-primary-color);
+}
+
+.landmark-delete-button,
+.landmark-cancel-button {
+  background-color: #dc3545;
+}
+
+.landmark-edit-button:hover {
+  background-color: #1e9a80;
+  transform: translateY(-1px);
+}
+
+.landmark-delete-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.landmark-save-button,
+.landmark-cancel-button {
+  width: auto;
+  padding: 8px 12px;
+}
+
+.landmark-save-button {
+  background-color: #28a745;
+}
+
+.landmark-save-button:hover {
+  background-color: #218838;
+}
+
+.landmark-cancel-button {
+  background-color: #6c757d;
+}
+
+.landmark-cancel-button:hover {
+  background-color: #5a6268;
+}
+
+.landmark-error-message {
+  color: #e53e3e;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #fee;
+  border-radius: 6px;
+  border: 1px solid #e53e3e;
+}
+
+.landmark-status-message {
+  text-align: center;
+  color: #4a5568;
+  padding: 20px 0;
+  font-weight: 500;
+}
+
+/* Photo Modal Styles */
+.landmark-photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.landmark-photo-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.landmark-photo-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  z-index: 1001;
+}
+
+.landmark-photo-modal-close:hover {
+  color: #000;
+}
+
+.landmark-modal-photo {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .landmark-container {
+    padding: 10px;
+  }
+
+  .landmark-container header {
+    margin-bottom: 20px;
+  }
+
+  .landmark-logo-text {
+    font-size: 24px;
+  }
+
+  .landmark-control-panel-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .landmark-search-container {
+    min-width: auto;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .landmark-dropdown-container {
+    width: 100%;
+  }
+
+  .landmark-dropdown-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .landmark-select-container {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .landmark-table {
+    font-size: 12px;
+    min-width: 800px;
+  }
+
+  .landmark-table th, .landmark-table td {
+    padding: 8px 10px;
+    min-width: 80px;
+  }
+
+  .landmark-table-image {
+    width: 80px;
+    height: 50px;
+  }
+
+  .landmark-data-container {
+    padding: 15px;
+  }
+
+  .landmark-photo-modal-content {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .landmark-modal-photo {
+    max-height: 60vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .landmark-container {
+    padding: 10px;
+  }
+
+  .landmark-logo-text {
+    font-size: 20px;
+  }
+
+  .landmark-table {
+    font-size: 11px;
+  }
+
+  .landmark-table th, .landmark-table td {
+    padding: 6px 8px;
+  }
+
+  .landmark-table-image {
+    width: 70px;
+    height: 40px;
+  }
+
+  .landmark-action-buttons button {
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+  }
+
+  .landmark-save-button,
+  .landmark-cancel-button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+

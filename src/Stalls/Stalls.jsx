@@ -1,105 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc
+} from "firebase/firestore";
 import "./Stalls.css";
+import { db } from "../firebaseConfig";
 
 const Stalls = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingStall, setEditingStall] = useState(null);
   const [editingRowId, setEditingRowId] = useState(null);
-  const [showPermissionModal, setShowPermissionModal] = useState(false);
-  const [modalPermission, setModalPermission] = useState("");
-
-  // Form state
   const [formData, setFormData] = useState({
     stallName: "",
     ownerName: "",
-    phoneNumber: "",
-    stallAddress: "",
-    permission: null,
-    permissionPreview: ""
+    phoneNumber: ""
   });
-
-  // Dummy stall data
-  const [stallData, setStallData] = useState([
-    {
-      id: 1,
-      stallName: "Food Corner",
-      stallAddress: "Block A, Near Main Gate",
-      ownerName: "Rajesh Kumar",
-      phoneNumber: "9876543210",
-      permission: ""
-    },
-    {
-      id: 2,
-      stallName: "Craft Gallery",
-      stallAddress: "Block B, Central Area",
-      ownerName: "Priya Sharma",
-      phoneNumber: "9876543211",
-      permission: ""
-    },
-    {
-      id: 3,
-      stallName: "Handloom Expo",
-      stallAddress: "Block C, East Wing",
-      ownerName: "Amit Singh",
-      phoneNumber: "9876543212",
-      permission: ""
-    },
-    {
-      id: 4,
-      stallName: "Art & Decor",
-      stallAddress: "Block D, West Wing",
-      ownerName: "Meera Patel",
-      phoneNumber: "9876543213",
-      permission: ""
-    },
-    {
-      id: 5,
-      stallName: "Traditional Jewelry",
-      stallAddress: "Block E, South Corner",
-      ownerName: "Vikram Joshi",
-      phoneNumber: "9876543214",
-      permission: ""
-    }
-  ]);
+  const [stallData, setStallData] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const isAddRoute = Boolean(useMatch("/festival/stalls/add"));
 
-  // Handle file upload and compression
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const stallsCollection = useMemo(() => collection(db, "stalls"), []);
 
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Please upload only PDF or DOC/DOCX files.');
-      return;
-    }
-
-    try {
-      // For PDF/DOC files, we don't compress but we can limit the size
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        alert('File size should be less than 5MB.');
-        return;
+  useEffect(() => {
+    const stallsQuery = query(stallsCollection, orderBy("stallName", "asc"));
+    const unsubscribe = onSnapshot(
+      stallsQuery,
+      (snapshot) => {
+        const records = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() || {};
+          return {
+            docId: docSnap.id,
+            stallName: data.stallName || "—",
+            ownerName: data.owner || "—",
+            phoneNumber: data.phone || ""
+          };
+        });
+        setStallData(records);
+      },
+      (error) => {
+        console.error("Error fetching stalls:", error);
+        alert("Failed to load stalls. Please try again.");
       }
+    );
 
-      // Create preview text (just the file name for documents)
-      const previewText = file.name;
-
-      setFormData(prev => ({
-        ...prev,
-        permission: file,
-        permissionPreview: previewText
-      }));
-    } catch (error) {
-      console.error('Error processing file:', error);
-      alert('Error processing file. Please try again.');
-    }
-  };
+    return () => unsubscribe();
+  }, [stallsCollection]);
 
   // Handle phone number input (numbers only, max 10 digits)
   const handlePhoneChange = (value) => {
@@ -116,7 +72,7 @@ const Stalls = () => {
   });
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validation
@@ -132,48 +88,35 @@ const Stalls = () => {
       alert("Please enter a valid 10-digit phone number");
       return;
     }
-    if (!formData.stallAddress.trim()) {
-      alert("Please enter stall address");
-      return;
-    }
-    if (!formData.permission) {
-      alert("Please upload permission document");
-      return;
-    }
 
-    if (editingStall) {
-      // Update existing stall
-      setStallData(prev => prev.map(stall =>
-        stall.id === editingStall.id
-          ? {
-              ...stall,
-              stallName: formData.stallName,
-              stallAddress: formData.stallAddress,
-              ownerName: formData.ownerName,
-              phoneNumber: formData.phoneNumber,
-              permission: formData.permissionPreview || stall.permission
-            }
-          : stall
-      ));
-      alert("Stall updated successfully!");
-      setEditingStall(null);
-    } else {
-      // Add new stall
-      const newStall = {
-        id: Date.now(),
-        stallName: formData.stallName,
-        stallAddress: formData.stallAddress,
-        ownerName: formData.ownerName,
-        phoneNumber: formData.phoneNumber,
-        permission: formData.permissionPreview
-      };
-      setStallData(prev => [...prev, newStall]);
-      alert("Stall added successfully!");
-    }
+    setIsSubmitting(true);
+    try {
+      if (editingStall && editingStall.docId) {
+        const stallRef = doc(db, "stalls", editingStall.docId);
+        await updateDoc(stallRef, {
+          stallName: formData.stallName.trim(),
+          owner: formData.ownerName.trim(),
+          phone: formData.phoneNumber.trim()
+        });
+        alert("Stall updated successfully!");
+      } else {
+        await addDoc(stallsCollection, {
+          stallName: formData.stallName.trim(),
+          owner: formData.ownerName.trim(),
+          phone: formData.phoneNumber.trim()
+        });
+        alert("Stall added successfully!");
+      }
 
-    // Reset form
-    resetForm();
-    navigate("/festival/stalls");
+      // Reset form
+      resetForm();
+      navigate("/festival/stalls");
+    } catch (error) {
+      console.error("Error saving stall:", error);
+      alert("Unable to save stall. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Reset form
@@ -181,17 +124,14 @@ const Stalls = () => {
     setFormData({
       stallName: "",
       ownerName: "",
-      phoneNumber: "",
-      stallAddress: "",
-      permission: null,
-      permissionPreview: ""
+      phoneNumber: ""
     });
     setEditingStall(null);
   };
 
   // Handle inline edit
   const handleInlineEdit = (stall) => {
-    setEditingRowId(stall.id);
+    setEditingRowId(stall.docId);
     setEditingStall({ ...stall });
   };
 
@@ -209,17 +149,25 @@ const Stalls = () => {
       alert("Please enter a valid 10-digit phone number");
       return;
     }
-    if (!editingStall.stallAddress.trim()) {
-      alert("Please enter stall address");
-      return;
-    }
 
-    setStallData(prev => prev.map(stall =>
-      stall.id === editingStall.id ? editingStall : stall
-    ));
-    setEditingRowId(null);
-    setEditingStall(null);
-    alert("Stall updated successfully!");
+    const saveChanges = async () => {
+      try {
+        const stallRef = doc(db, "stalls", editingStall.docId);
+        await updateDoc(stallRef, {
+          stallName: editingStall.stallName.trim(),
+          owner: editingStall.ownerName.trim(),
+          phone: editingStall.phoneNumber.trim()
+        });
+        setEditingRowId(null);
+        setEditingStall(null);
+        alert("Stall updated successfully!");
+      } catch (error) {
+        console.error("Error updating stall:", error);
+        alert("Unable to update stall. Please try again.");
+      }
+    };
+
+    void saveChanges();
   };
 
   // Handle cancel inline edit
@@ -237,21 +185,21 @@ const Stalls = () => {
   };
 
   // Handle delete stall
-  const handleDelete = (stallId) => {
-    if (window.confirm("Are you sure you want to delete this stall?")) {
-      setStallData(prev => prev.filter(stall => stall.id !== stallId));
-      alert("Stall deleted successfully!");
-    }
-  };
+  const handleDelete = (stall) => {
+    if (!stall?.docId) return;
+    if (!window.confirm("Are you sure you want to delete this stall?")) return;
 
-  // Handle permission modal
-  const handlePermissionClick = (permissionUrl) => {
-    if (permissionUrl) {
-      setModalPermission(permissionUrl);
-      setShowPermissionModal(true);
-    } else {
-      alert("No permission document uploaded yet.");
-    }
+    const deleteStall = async () => {
+      try {
+        await deleteDoc(doc(db, "stalls", stall.docId));
+        alert("Stall deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting stall:", error);
+        alert("Unable to delete stall. Please try again.");
+      }
+    };
+
+    void deleteStall();
   };
 
   return (
@@ -304,60 +252,48 @@ const Stalls = () => {
                   <tr>
                     <th className="stalls-sl-no-header">Sl No.</th>
                     <th>Stall Name</th>
-                    <th>Stall Address</th>
                     <th>Owner's Name</th>
                     <th>Phone Number</th>
-                    <th>Permission</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredStalls.map((stall, index) => (
-                    <tr key={stall.id}>
+                    <tr key={stall.docId || index}>
                       <td className="stalls-sl-no-cell">{index + 1}</td>
                       <td>
-                        {editingRowId === stall.id ? (
+                        {editingRowId === stall.docId ? (
                           <input
                             type="text"
                             className="stalls-inline-input"
                             value={editingStall.stallName}
-                            onChange={(e) => handleInlineFieldChange('stallName', e.target.value)}
+                            onChange={(e) => handleInlineFieldChange("stallName", e.target.value)}
                           />
                         ) : (
                           stall.stallName
                         )}
                       </td>
                       <td>
-                        {editingRowId === stall.id ? (
-                          <input
-                            type="text"
-                            className="stalls-inline-input"
-                            value={editingStall.stallAddress}
-                            onChange={(e) => handleInlineFieldChange('stallAddress', e.target.value)}
-                          />
-                        ) : (
-                          stall.stallAddress
-                        )}
-                      </td>
-                      <td>
-                        {editingRowId === stall.id ? (
+                        {editingRowId === stall.docId ? (
                           <input
                             type="text"
                             className="stalls-inline-input"
                             value={editingStall.ownerName}
-                            onChange={(e) => handleInlineFieldChange('ownerName', e.target.value)}
+                            onChange={(e) => handleInlineFieldChange("ownerName", e.target.value)}
                           />
                         ) : (
                           stall.ownerName
                         )}
                       </td>
                       <td>
-                        {editingRowId === stall.id ? (
+                        {editingRowId === stall.docId ? (
                           <input
                             type="text"
                             className="stalls-inline-input stalls-phone-input"
                             value={editingStall.phoneNumber}
-                            onChange={(e) => handleInlineFieldChange('phoneNumber', e.target.value)}
+                            onChange={(e) =>
+                              handleInlineFieldChange("phoneNumber", e.target.value)
+                            }
                             placeholder="10 digits"
                             maxLength="10"
                           />
@@ -366,18 +302,8 @@ const Stalls = () => {
                         )}
                       </td>
                       <td>
-                        {stall.permission && (
-                          <button
-                            className="stalls-view-permission-button"
-                            onClick={() => handlePermissionClick(stall.permission)}
-                          >
-                            View
-                          </button>
-                        )}
-                      </td>
-                      <td>
                         <div className="stalls-action-buttons">
-                          {editingRowId === stall.id ? (
+                          {editingRowId === stall.docId ? (
                             <>
                               <button
                                 className="stalls-save-button"
@@ -401,17 +327,37 @@ const Stalls = () => {
                                 onClick={() => handleInlineEdit(stall)}
                                 title="Edit"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
                                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                               </button>
                               <button
                                 className="stalls-delete-button"
-                                onClick={() => handleDelete(stall.id)}
+                                onClick={() => handleDelete(stall)}
                                 title="Delete"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
                                   <path d="M3 6h18"></path>
                                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
                                   <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -484,37 +430,6 @@ const Stalls = () => {
                   />
                 </div>
 
-                <div className="stalls-form-group">
-                  <label className="stalls-form-label" htmlFor="stallAddress">Stall Address:</label>
-                  <input
-                    id="stallAddress"
-                    type="text"
-                    className="stalls-form-text-input"
-                    value={formData.stallAddress}
-                    onChange={(e) => setFormData(prev => ({ ...prev, stallAddress: e.target.value }))}
-                    placeholder="Enter stall address"
-                  />
-                </div>
-              </div>
-
-              <div className="stalls-form-row">
-                <div className="stalls-form-group stalls-form-group-full-width">
-                  <label className="stalls-form-label" htmlFor="permission">Permission Document:</label>
-                  <div className="stalls-file-upload-container">
-                    <input
-                      id="permission"
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleFileUpload}
-                      className="stalls-file-input"
-                    />
-                    {formData.permissionPreview && (
-                      <div className="stalls-file-preview">
-                        <span className="stalls-file-name">{formData.permissionPreview}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
               </div>
 
               <div className="stalls-form-row stalls-form-submit-row">
@@ -527,18 +442,6 @@ const Stalls = () => {
         )}
       </div>
 
-      {/* Permission Document Modal */}
-      {showPermissionModal && (
-        <div className="stalls-permission-modal" onClick={() => setShowPermissionModal(false)}>
-          <div className="stalls-permission-modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="stalls-permission-modal-close" onClick={() => setShowPermissionModal(false)}>&times;</span>
-            <div className="stalls-permission-document">
-              <p>Document: {modalPermission}</p>
-              <p>Note: This is a placeholder for the document viewer. In a real implementation, this would show the actual document.</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

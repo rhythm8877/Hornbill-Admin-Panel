@@ -260,7 +260,7 @@
 
 .contest-action-buttons {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   justify-content: center;
 }
 

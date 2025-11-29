@@ -10,6 +10,7 @@ import HotelsGuestHouse from "./Hotels & Guest House/HotelsGuestHouse";
 import RestaurantCafe from "./Restaurant & Cafe/RestaurantCafe";
 import ServicesCarousel from "./ServicesCarousel/ServicesCarousel";
 import Contest from "./Contest/Contest";
+import Landmark from "./Landmark/Landmark";
 import Stalls from "./Stalls/Stalls";
 import TourGuides from "./Tour Guides/TourGuides";
 import TourOperators from "./Tour Operators/TourOperators";
@@ -50,6 +51,7 @@ const App = () => {
             <Route index element={<Contest />} />
             <Route path="add" element={<Contest />} />
           </Route>
+          <Route path="landmark" element={<Landmark />} />
         </Route>
 
         {/* Festival routes */}
