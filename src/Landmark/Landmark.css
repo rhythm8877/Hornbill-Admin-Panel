@@ -32,13 +32,33 @@
   white-space: nowrap;
 }
 
-.landmark-data-container {
-  background: white;
+.landmark-add-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.landmark-add-button {
+  padding: 10px 20px;
+  background-color: var(--landmark-primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.landmark-add-button:hover {
+  background-color: #1e9a80;
+}
+
+.landmark-data-container,
+.landmark-form-container {
+  background: #fff;
   border-radius: 10px;
-  box-shadow: var(--landmark-shadow);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 20px;
-  margin-bottom: 20px;
-  display: block;
 }
 
 .landmark-control-panel-filters {
@@ -200,11 +220,39 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.landmark-edit-image-container:hover {
+  background-color: #f8f9fa;
 }
 
 .landmark-empty-state {
   font-size: 12px;
   color: #718096;
+}
+
+.landmark-empty-state-clickable {
+  width: 100px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 2px dashed var(--landmark-border-color);
+  border-radius: 4px;
+  color: #718096;
+  font-size: 12px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.landmark-empty-state-clickable:hover {
+  background-color: #e8e8e8;
+  border-color: var(--landmark-primary-color);
+  color: var(--landmark-primary-color);
 }
 
 .landmark-image-edit-hint {
@@ -458,5 +506,132 @@
     padding: 6px 10px;
     font-size: 12px;
   }
+}
+
+/* Form Styles */
+.landmark-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--landmark-primary-light);
+}
+
+.landmark-form-header h3 {
+  color: var(--landmark-primary-color);
+  font-size: 24px;
+  margin: 0;
+}
+
+.landmark-back-button {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.landmark-back-button:hover {
+  background-color: #5a6268;
+}
+
+.landmark-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.landmark-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.landmark-form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+  width: 100%;
+}
+
+.landmark-form-group-full {
+  flex-basis: 100%;
+}
+
+.landmark-form-label {
+  font-weight: 600;
+  color: var(--landmark-primary-color);
+  margin-bottom: 8px;
+}
+
+.landmark-form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--landmark-border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f8f9fa;
+}
+
+.landmark-form-input:focus {
+  outline: none;
+  border-color: var(--landmark-primary-color);
+  box-shadow: 0 0 0 2px rgba(36, 178, 149, 0.1);
+}
+
+.landmark-file-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.landmark-file-input {
+  padding: 8px;
+  border: 1px solid var(--landmark-border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #f8f9fa;
+}
+
+.landmark-image-preview {
+  margin-top: 10px;
+}
+
+.landmark-image-preview img {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--landmark-border-color);
+}
+
+.landmark-form-submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.landmark-form-submit-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--landmark-primary-color);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.landmark-form-submit-button:hover:not(:disabled) {
+  background-color: #1e9a80;
+}
+
+.landmark-form-submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 

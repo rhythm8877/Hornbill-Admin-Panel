@@ -9,7 +9,7 @@ import {
   query,
   updateDoc
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useEffect, useMemo, useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import Select from "react-select";
@@ -285,6 +285,16 @@ const Contest = () => {
     setIsSubmitting(true);
     try {
       const docRef = doc(db, "contests", editingContest.docId);
+      
+      // Get the original contest data to find the old image URL
+      const originalContest = contests.find(c => c.docId === editingContest.docId);
+      const oldImageUrl = originalContest?.poster;
+      
+      // If a new image is being uploaded (data URL), delete the old image first
+      if (editingContest.poster && isDataUrl(editingContest.poster) && oldImageUrl) {
+        await deleteImageFromStorage(oldImageUrl);
+      }
+      
       const basePath = `posters`;
       const posterUrl = await uploadImageToStorage(
         editingContest.poster,
@@ -310,11 +320,57 @@ const Contest = () => {
     }
   };
 
+  const deleteImageFromStorage = async (imageUrl) => {
+    if (!imageUrl || imageUrl.trim() === "") return;
+    
+    try {
+      // Handle Firebase Storage URL format
+      // URL format: https://firebasestorage.googleapis.com/v0/b/{bucket}/o/{encodedPath}?alt=media&token={token}
+      if (imageUrl.includes("firebasestorage.googleapis.com")) {
+        const url = new URL(imageUrl);
+        // Extract the encoded path from the URL
+        const pathMatch = url.pathname.match(/\/o\/(.+?)(\?|$)/);
+        if (pathMatch) {
+          let encodedPath = pathMatch[1];
+          // Decode the path (may need double decoding)
+          let decodedPath = decodeURIComponent(encodedPath);
+          // Try double decoding in case it's double-encoded
+          try {
+            decodedPath = decodeURIComponent(decodedPath);
+          } catch (e) {
+            // Already decoded, use as is
+          }
+          
+          const storageRef = ref(storage, decodedPath);
+          await deleteObject(storageRef);
+          console.log("Successfully deleted image from storage:", decodedPath);
+        } else {
+          console.warn("Could not extract path from Firebase Storage URL:", imageUrl);
+        }
+      } else {
+        // If it's not a Firebase Storage URL, try to use it as a direct path
+        const storageRef = ref(storage, imageUrl);
+        await deleteObject(storageRef);
+        console.log("Successfully deleted image from storage using direct path:", imageUrl);
+      }
+    } catch (error) {
+      console.error("Error deleting image from storage:", error);
+      console.error("Image URL was:", imageUrl);
+      // Don't throw - continue with document deletion even if image deletion fails
+    }
+  };
+
   const handleDelete = async (contest) => {
     if (!contest?.docId) return;
     if (!window.confirm("Are you sure you want to delete this contest entry?")) return;
 
     try {
+      // Delete image from Storage first
+      if (contest.poster) {
+        await deleteImageFromStorage(contest.poster);
+      }
+      
+      // Then delete the document
       await deleteDoc(doc(db, "contests", contest.docId));
       alert("Contest deleted successfully!");
     } catch (error) {

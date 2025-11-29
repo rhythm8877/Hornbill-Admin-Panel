@@ -51,7 +51,10 @@ const App = () => {
             <Route index element={<Contest />} />
             <Route path="add" element={<Contest />} />
           </Route>
-          <Route path="landmark" element={<Landmark />} />
+          <Route path="landmark">
+            <Route index element={<Landmark />} />
+            <Route path="add" element={<Landmark />} />
+          </Route>
         </Route>
 
         {/* Festival routes */}
