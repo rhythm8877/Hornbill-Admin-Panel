@@ -75,6 +75,7 @@ const DUMMY_HORNBILL_DATA = [
 const getInitialFormState = () => ({
   day: "",
   date: "",
+  title: "",
   pdf: "",
   timeline: [
     {
@@ -151,7 +152,7 @@ const Hornbill = () => {
             // Transform Firebase data to table format - one row per day
             const transformedData = [];
             dataArray.forEach((item, index) => {
-              if (item && (item.timeline || item.date || item.pdf)) {
+              if (item && (item.timeline || item.date || item.pdf || item.title)) {
                 const day = index + 1;
                 transformedData.push({
                   docId: `day-${day}`,
@@ -159,6 +160,7 @@ const Hornbill = () => {
                   day: `Day ${day}`,
                   dayNumber: day,
                   date: item.date || "—",
+                  title: item.title || "—",
                   pdf: item.pdf || "",
                   timeline: item.timeline || [], // Store full timeline array
                   timelineCount: item.timeline ? item.timeline.length : 0
@@ -191,11 +193,12 @@ const Hornbill = () => {
     const searchLower = searchTerm.toLowerCase();
     const dayMatch = (item.day || "").toLowerCase().includes(searchLower);
     const dateMatch = (item.date || "").toLowerCase().includes(searchLower);
+    const titleMatch = (item.title || "").toLowerCase().includes(searchLower);
     const timelineMatch = item.timeline && item.timeline.some((entry) => 
       (entry.title || "").toLowerCase().includes(searchLower) ||
       (entry.time || "").toLowerCase().includes(searchLower)
     );
-    return dayMatch || dateMatch || timelineMatch;
+    return dayMatch || dateMatch || titleMatch || timelineMatch;
   });
 
   // Handle timeline view
@@ -244,6 +247,7 @@ const Hornbill = () => {
       const updatedItem = {
         date: editingHornbill.date || "",
         day: editingHornbill.dayNumber.toString(),
+        title: editingHornbill.title || "",
         timeline: editingHornbill.timeline || []
       };
 
@@ -402,7 +406,8 @@ const Hornbill = () => {
       // Prepare the data object
       const dataObject = {
         date: formData.date.trim(),
-        day: formData.day.trim()
+        day: formData.day.trim(),
+        title: formData.title.trim() || ""
       };
 
       // Add PDF only if provided
@@ -594,6 +599,7 @@ const Hornbill = () => {
                     <th className="hornbill-sl-no-header">Sl No.</th>
                     <th>Day</th>
                     <th>Date</th>
+                    <th>Title</th>
                     <th>Timeline</th>
                     <th>PDF</th>
                     <th>Action</th>
@@ -625,6 +631,19 @@ const Hornbill = () => {
                           />
                         ) : (
                           item.date || "—"
+                        )}
+                      </td>
+                      <td>
+                        {editingId === (item.docId || item.id) ? (
+                          <input
+                            type="text"
+                            className="hornbill-inline-input"
+                            value={editingHornbill?.title || ""}
+                            onChange={(e) => handleEditFieldChange("title", e.target.value)}
+                            placeholder="Enter title"
+                          />
+                        ) : (
+                          item.title || "—"
                         )}
                       </td>
                       <td>
@@ -810,6 +829,24 @@ const Hornbill = () => {
                   value={formData.date}
                   onChange={(e) => handleFormFieldChange("date", e.target.value)}
                   placeholder="Enter date"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Title */}
+            <div className="hornbill-form-row">
+              <div className="hornbill-form-group hornbill-form-group-full">
+                <label className="hornbill-form-label" htmlFor="title">
+                  Title *
+                </label>
+                <input
+                  id="title"
+                  type="text"
+                  className="hornbill-form-input"
+                  value={formData.title}
+                  onChange={(e) => handleFormFieldChange("title", e.target.value)}
+                  placeholder="Enter title for this day"
                   required
                 />
               </div>
@@ -1023,6 +1060,9 @@ const Hornbill = () => {
             <div className="hornbill-modal-body">
               <div className="hornbill-timeline-info">
                 <p><strong>Date:</strong> {selectedTimeline.date}</p>
+                {selectedTimeline.title && (
+                  <p><strong>Title:</strong> {selectedTimeline.title}</p>
+                )}
                 {selectedTimeline.pdf && (
                   <p>
                     <strong>PDF:</strong>{" "}
