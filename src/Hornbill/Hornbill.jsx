@@ -100,6 +100,9 @@ const Hornbill = () => {
   const [isLoadingIcons, setIsLoadingIcons] = useState(false);
   const [selectedTimeline, setSelectedTimeline] = useState(null);
   const [isTimelineModalOpen, setIsTimelineModalOpen] = useState(false);
+  const [editingTimeline, setEditingTimeline] = useState(null);
+  const [isTimelineEditModalOpen, setIsTimelineEditModalOpen] = useState(false);
+  const [timelineEditData, setTimelineEditData] = useState([]);
 
   const navigate = useNavigate();
   const isAddRoute = Boolean(useMatch("/festival/hornbill/add"));
@@ -107,7 +110,7 @@ const Hornbill = () => {
 
   // Fetch available icons from Firebase Storage
   useEffect(() => {
-    if (isAddRoute) {
+    if (isAddRoute || isTimelineEditModalOpen) {
       const fetchIcons = async () => {
         setIsLoadingIcons(true);
         try {
@@ -137,7 +140,7 @@ const Hornbill = () => {
       
       fetchIcons();
     }
-  }, [isAddRoute]);
+  }, [isAddRoute, isTimelineEditModalOpen]);
 
   // Fetch hornbill data from Firebase
   useEffect(() => {
@@ -210,6 +213,116 @@ const Hornbill = () => {
   const handleCloseTimelineModal = () => {
     setIsTimelineModalOpen(false);
     setSelectedTimeline(null);
+  };
+
+  // Handle timeline edit
+  const handleEditTimeline = (item) => {
+    setEditingTimeline(item);
+    setTimelineEditData(item.timeline && item.timeline.length > 0 
+      ? [...item.timeline] 
+      : [{ icon: "", time: "", title: "", description: "" }]);
+    setIsTimelineEditModalOpen(true);
+  };
+
+  const handleCloseTimelineEditModal = () => {
+    setIsTimelineEditModalOpen(false);
+    setEditingTimeline(null);
+    setTimelineEditData([]);
+  };
+
+  const handleTimelineEditChange = (index, field, value) => {
+    setTimelineEditData((prev) => {
+      const newData = [...prev];
+      newData[index] = {
+        ...newData[index],
+        [field]: value
+      };
+      return newData;
+    });
+  };
+
+  const addTimelineEditEntry = () => {
+    setTimelineEditData((prev) => [
+      ...prev,
+      { icon: "", time: "", title: "", description: "" }
+    ]);
+  };
+
+  const removeTimelineEditEntry = (index) => {
+    if (timelineEditData.length > 1) {
+      setTimelineEditData((prev) => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleSaveTimelineEdit = async () => {
+    if (!editingTimeline) return;
+
+    // Validate timeline entries
+    for (let i = 0; i < timelineEditData.length; i++) {
+      const entry = timelineEditData[i];
+      if (!entry.time || !entry.time.trim()) {
+        alert(`Please enter time for timeline entry ${i + 1}.`);
+        return;
+      }
+      if (!entry.title || !entry.title.trim()) {
+        alert(`Please enter title for timeline entry ${i + 1}.`);
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Get current document
+      const docSnap = await getDoc(hornbillDocRef);
+      if (!docSnap.exists()) {
+        alert("Document not found. Please try again.");
+        return;
+      }
+
+      const currentData = docSnap.data();
+      const dataArray = currentData.data || [];
+      const dayIndex = editingTimeline.dayNumber - 1;
+
+      if (dayIndex < 0 || dayIndex >= dataArray.length) {
+        alert("Invalid day index. Please try again.");
+        return;
+      }
+
+      // Prepare timeline array (remove empty descriptions)
+      const timelineArray = timelineEditData.map((entry) => {
+        const timelineItem = {
+          icon: entry.icon || "",
+          time: entry.time.trim(),
+          title: entry.title.trim()
+        };
+        // Add description only if provided
+        if (entry.description && entry.description.trim()) {
+          timelineItem.description = entry.description.trim();
+        }
+        return timelineItem;
+      });
+
+      // Update the specific day's timeline
+      const updatedItem = {
+        ...dataArray[dayIndex],
+        timeline: timelineArray
+      };
+
+      dataArray[dayIndex] = updatedItem;
+
+      // Update Firebase
+      await updateDoc(hornbillDocRef, {
+        data: dataArray
+      });
+
+      alert("Timeline updated successfully!");
+      handleCloseTimelineEditModal();
+    } catch (error) {
+      console.error("Error updating timeline:", error);
+      alert("Unable to update timeline. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEdit = (item) => {
@@ -649,30 +762,77 @@ const Hornbill = () => {
                       <td>
                         {editingId === (item.docId || item.id) ? (
                           <span className="hornbill-empty-state">Edit timeline via form</span>
-                        ) : item.timeline && item.timeline.length > 0 ? (
-                          <button
-                            className="hornbill-timeline-button"
-                            onClick={() => handleViewTimeline(item)}
-                            title="View Timeline"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <circle cx="12" cy="12" r="10"></circle>
-                              <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                            View Timeline ({item.timelineCount})
-                          </button>
                         ) : (
-                          <span className="hornbill-empty-state">No Timeline</span>
+                          <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                            {item.timeline && item.timeline.length > 0 ? (
+                              <>
+                                <button
+                                  className="hornbill-timeline-button"
+                                  onClick={() => handleViewTimeline(item)}
+                                  title="View Timeline"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                  </svg>
+                                  View ({item.timelineCount})
+                                </button>
+                                <button
+                                  className="hornbill-edit-timeline-button"
+                                  onClick={() => handleEditTimeline(item)}
+                                  title="Edit Timeline"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                  </svg>
+                                  Edit
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                className="hornbill-edit-timeline-button"
+                                onClick={() => handleEditTimeline(item)}
+                                title="Add Timeline"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="14"
+                                  height="14"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Add Timeline
+                              </button>
+                            )}
+                          </div>
                         )}
                       </td>
                       <td>
@@ -1108,6 +1268,199 @@ const Hornbill = () => {
               ) : (
                 <div className="hornbill-empty-timeline">No timeline entries for this day.</div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Timeline Edit Modal */}
+      {isTimelineEditModalOpen && editingTimeline && (
+        <div className="hornbill-modal-overlay" onClick={handleCloseTimelineEditModal}>
+          <div className="hornbill-modal-content hornbill-timeline-edit-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="hornbill-modal-header">
+              <h3>Edit Timeline - {editingTimeline.day}</h3>
+              <button
+                className="hornbill-modal-close"
+                onClick={handleCloseTimelineEditModal}
+                title="Close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div className="hornbill-modal-body">
+              <div className="hornbill-timeline-edit-list">
+                {timelineEditData.map((entry, index) => (
+                  <div key={index} className="hornbill-timeline-edit-entry">
+                    <div className="hornbill-timeline-entry-header">
+                      <h4>Timeline Entry {index + 1}</h4>
+                      {timelineEditData.length > 1 && (
+                        <button
+                          type="button"
+                          className="hornbill-remove-timeline-button"
+                          onClick={() => removeTimelineEditEntry(index)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="hornbill-form-row">
+                      <div className="hornbill-form-group">
+                        <label className="hornbill-form-label">
+                          Icon *
+                        </label>
+                        {isLoadingIcons ? (
+                          <div className="hornbill-loading-icons">Loading icons...</div>
+                        ) : (
+                          <Select
+                            value={
+                              entry.icon
+                                ? iconOptions.find((opt) => opt.value === entry.icon) || null
+                                : null
+                            }
+                            onChange={(option) =>
+                              handleTimelineEditChange(index, "icon", option?.value || "")
+                            }
+                            options={iconOptions}
+                            formatOptionLabel={formatOptionLabel}
+                            styles={customSelectStyles}
+                            isSearchable
+                            placeholder="Select an icon"
+                            classNamePrefix="hornbill-icon-select"
+                          />
+                        )}
+                        {entry.icon && (
+                          <div className="hornbill-selected-icon-preview">
+                            <img
+                              src={entry.icon}
+                              alt="Selected icon"
+                              onError={(e) => {
+                                e.target.style.display = "none";
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="hornbill-form-group">
+                        <label className="hornbill-form-label">
+                          Time *
+                        </label>
+                        <input
+                          type="text"
+                          className="hornbill-form-input"
+                          value={entry.time}
+                          onChange={(e) =>
+                            handleTimelineEditChange(index, "time", e.target.value)
+                          }
+                          placeholder="Enter time (e.g., 10:00 AM - 12:00 PM)"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="hornbill-form-row">
+                      <div className="hornbill-form-group">
+                        <label className="hornbill-form-label">
+                          Title *
+                        </label>
+                        <input
+                          type="text"
+                          className="hornbill-form-input"
+                          value={entry.title}
+                          onChange={(e) =>
+                            handleTimelineEditChange(index, "title", e.target.value)
+                          }
+                          placeholder="Enter title"
+                          required
+                        />
+                      </div>
+
+                      <div className="hornbill-form-group">
+                        <label className="hornbill-form-label">
+                          Description (Optional)
+                        </label>
+                        <textarea
+                          className="hornbill-form-textarea"
+                          value={entry.description || ""}
+                          onChange={(e) =>
+                            handleTimelineEditChange(index, "description", e.target.value)
+                          }
+                          placeholder="Enter description (optional)"
+                          rows="3"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="hornbill-timeline-edit-actions">
+                <button
+                  type="button"
+                  className="hornbill-add-timeline-button"
+                  onClick={addTimelineEditEntry}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Add Timeline Entry
+                </button>
+                <div className="hornbill-timeline-edit-buttons">
+                  <button
+                    type="button"
+                    className="hornbill-cancel-button"
+                    onClick={handleCloseTimelineEditModal}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="hornbill-form-submit-button"
+                    onClick={handleSaveTimelineEdit}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Saving..." : "Save Timeline"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
