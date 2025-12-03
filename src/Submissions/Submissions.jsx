@@ -2,7 +2,7 @@
 
 import { collection, deleteDoc, doc, onSnapshot, orderBy, query } from "firebase/firestore";
 import { deleteObject, ref as storageRef } from "firebase/storage";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import { db, storage } from "../firebaseConfig";
 import "./Submissions.css";
@@ -18,20 +18,22 @@ const Submissions = () => {
     label: "Votes (Default)"
   });
   const [submissionsData, setSubmissionsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Infinite scroll state
-  const ITEMS_PER_PAGE = 20;
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
-  const loadMoreRef = useRef(null);
+  // Pagination state
+  const ITEMS_PER_PAGE = 100;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const submissionsCollection = useMemo(() => collection(db, "submissions"), []);
 
   useEffect(() => {
     const submissionsQuery = query(submissionsCollection, orderBy("localDateString", "desc"));
+    setIsLoading(true);
+
     const unsubscribe = onSnapshot(
       submissionsQuery,
       (snapshot) => {
@@ -46,9 +48,11 @@ const Submissions = () => {
           };
         });
         setSubmissionsData(records);
+        setIsLoading(false);
       },
       (error) => {
         console.error("Error fetching submissions:", error);
+        setIsLoading(false);
       }
     );
 
@@ -96,41 +100,17 @@ const Submissions = () => {
       }
     });
 
-  // Visible subset for infinite scroll
-  const visibleSubmissions = filteredSubmissions.slice(0, visibleCount);
+  // Pagination: compute total pages and visible submissions
+  const totalPages = Math.max(1, Math.ceil(filteredSubmissions.length / ITEMS_PER_PAGE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const visibleSubmissions = filteredSubmissions.slice(startIndex, endIndex);
 
-  // Reset visible count when filters or data change
+  // Reset to first page when filters or data length change
   useEffect(() => {
-    setVisibleCount(ITEMS_PER_PAGE);
+    setCurrentPage(1);
   }, [searchTerm, selectedDateSort.value, selectedVoteSort.value, submissionsData.length]);
-
-  // IntersectionObserver for infinite scroll
-  useEffect(() => {
-    if (!loadMoreRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          setVisibleCount((prev) => {
-            if (prev >= filteredSubmissions.length) return prev;
-            return Math.min(prev + ITEMS_PER_PAGE, filteredSubmissions.length);
-          });
-        }
-      },
-      {
-        root: null,
-        rootMargin: "0px",
-        threshold: 1.0
-      }
-    );
-
-    observer.observe(loadMoreRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [filteredSubmissions.length]);
 
   // Handle photo modal
   const handlePhotoClick = (photoUrl) => {
@@ -416,13 +396,19 @@ const Submissions = () => {
                 <th>Name</th>
                 <th>Votes</th>
                 <th>Date</th>
-                <th>Action</th>
+                <th className="submission-action-header">Action</th>
               </tr>
             </thead>
             <tbody>
-              {filteredSubmissions.length === 0 ? (
+              {isLoading ? (
                 <tr>
-                  <td colSpan="7" className="submission-empty-state">
+                  <td colSpan="6" className="submission-empty-state">
+                    Loading submissions...
+                  </td>
+                </tr>
+              ) : filteredSubmissions.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="submission-empty-state">
                     No submissions found.
                   </td>
                 </tr>
@@ -437,10 +423,10 @@ const Submissions = () => {
                           checked={selectedItems.has(submission.docId)}
                           onChange={() => handleSelectItem(submission.docId)}
                         />
-                        <span>{index + 1}</span>
+                        <span>{startIndex + index + 1}</span>
                       </div>
                     </td>
-                    <td>
+                    <td className="submission-action-cell">
                       {submission.photoUrl ? (
                         <div
                           className="submission-photo-container"
@@ -494,18 +480,27 @@ const Submissions = () => {
                   </tr>
                 ))
               )}
-              {visibleSubmissions.length > 0 &&
-                visibleSubmissions.length < filteredSubmissions.length && (
-                  <tr>
-                    <td colSpan="7">
-                      <div ref={loadMoreRef} className="submission-load-more-sentinel">
-                        Loading more submissions...
-                      </div>
-                    </td>
-                  </tr>
-                )}
             </tbody>
           </table>
+          {/* Pagination Controls */}
+          {!isLoading && filteredSubmissions.length > 0 && (
+            <div className="submission-pagination">
+              <div className="submission-page-numbers">
+                {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={`submission-page-button ${
+                      page === safeCurrentPage ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -146,7 +146,7 @@
 .submission-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1000px;
+  min-width: 900px;
   font-size: 14px;
   border: 1px solid var(--submission-border-color);
 }
@@ -172,6 +172,15 @@
   text-align: left;
   word-wrap: break-word;
   white-space: normal;
+}
+
+/* Narrower Action column so it fits on screen */
+.submission-action-header,
+.submission-action-cell {
+  min-width: 80px !important;
+  max-width: 100px !important;
+  width: 80px !important;
+  text-align: center;
 }
 
 .submission-checkbox {
@@ -358,6 +367,50 @@
   border-radius: 4px;
 }
 
+/* Pagination */
+.submission-pagination {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--submission-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.submission-page-numbers {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.submission-page-button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--submission-border-color);
+  background-color: #f3f4f6;
+  color: var(--submission-text-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submission-page-button.active {
+  background-color: var(--submission-primary-color);
+  border-color: var(--submission-primary-color);
+  color: #fff;
+}
+
+.submission-page-button:disabled {
+  background-color: #f1f1f1;
+  color: #a0aec0;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .submission-container {
@@ -402,6 +455,15 @@
 
   .submission-data-container {
     padding: 15px;
+  }
+
+  .submission-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submission-page-numbers {
+    justify-content: center;
   }
 }
 
