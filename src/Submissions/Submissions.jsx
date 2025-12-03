@@ -413,7 +413,7 @@ const Submissions = () => {
                   </div>
                 </th>
                 <th>Photo</th>
-                <th>Submitted By</th>
+                <th>Name</th>
                 <th>Votes</th>
                 <th>Date</th>
                 <th>Action</th>
