@@ -18,6 +18,7 @@ import TouristSpots from "./Tourist Spots/TouristSpots";
 import TribalFestival from "./Tribal Festival/TribalFestival";
 import Tribes from "./Tribes/Tribes";
 import Hornbill from "./Hornbill/Hornbill";
+import Submissions from "./Submissions/Submissions";
 
 const App = () => {
   return (
@@ -81,6 +82,7 @@ const App = () => {
             <Route index element={<Hornbill />} />
             <Route path="add" element={<Hornbill />} />
           </Route>
+          <Route path="submissions" element={<Submissions />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/services/hotels&guesthouse" replace />} />

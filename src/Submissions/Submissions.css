@@ -1,0 +1,426 @@
+:root {
+  --submission-primary-color: #24B295;
+  --submission-primary-light: #e5f7f3;
+  --submission-secondary-color: #f8f9fa;
+  --submission-border-color: #c9ede7;
+  --submission-text-color: #333;
+  --submission-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.submission-container {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.submission-container header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-direction: row;
+  white-space: nowrap;
+}
+
+.submission-logo-text {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--submission-primary-color);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.submission-data-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: var(--submission-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.submission-control-panel-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.submission-search-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.submission-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.submission-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  z-index: 1;
+}
+
+.submission-search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  font-size: 14px;
+  border: 1px solid var(--submission-border-color);
+  border-radius: 6px;
+  outline: none;
+  background-color: var(--submission-secondary-color);
+}
+
+.submission-search-input:focus {
+  border-color: var(--submission-primary-color);
+  box-shadow: 0 0 0 2px rgba(36, 178, 149, 0.1);
+}
+
+.submission-dropdown-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.submission-dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.submission-label-text {
+  font-weight: 600;
+  color: var(--submission-primary-color);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.submission-select-container {
+  min-width: 180px;
+}
+
+.submission-bulk-delete-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.submission-bulk-delete-button:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.submission-bulk-delete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submission-table-container {
+  overflow-x: auto;
+  margin-top: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.submission-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+  font-size: 14px;
+  border: 1px solid var(--submission-border-color);
+}
+
+.submission-table th,
+.submission-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid var(--submission-border-color);
+  min-width: 100px;
+  vertical-align: middle;
+}
+
+.submission-table th {
+  background-color: var(--submission-primary-light);
+  font-weight: 600;
+  white-space: nowrap;
+  text-align: left;
+  color: black;
+}
+
+.submission-table td {
+  text-align: left;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.submission-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  border: 2px solid var(--submission-border-color);
+  background-color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.submission-checkbox::after {
+  content: "";
+  width: 10px;
+  height: 6px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.submission-checkbox:checked {
+  background-color: var(--submission-primary-color);
+  border-color: var(--submission-primary-color);
+}
+
+.submission-checkbox:checked::after {
+  opacity: 1;
+}
+
+.submission-sl-no-header,
+.submission-sl-no-cell {
+  min-width: 80px !important;
+  max-width: 100px !important;
+  width: 80px !important;
+  text-align: center;
+}
+
+.submission-slno-header-content,
+.submission-slno-cell-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submission-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.submission-photo {
+  width: 100px;
+  height: 60px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 2px solid var(--submission-border-color);
+  transition: transform 0.2s ease;
+}
+
+.submission-photo:hover {
+  transform: scale(1.1);
+  border-color: var(--submission-primary-color);
+}
+
+.submission-photo-placeholder {
+  width: 100px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 2px solid var(--submission-border-color);
+  border-radius: 4px;
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+}
+
+.submission-load-more-sentinel {
+  text-align: center;
+  padding: 12px;
+  color: #718096;
+  font-size: 13px;
+}
+
+.submission-muted-text {
+  font-size: 12px;
+  color: #718096;
+}
+
+.submission-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 8px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submission-delete-button:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.submission-delete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submission-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+/* Photo Modal */
+.submission-photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.submission-photo-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.submission-photo-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 10001;
+  transition: color 0.2s ease;
+}
+
+.submission-photo-modal-close:hover {
+  color: #333;
+}
+
+.submission-modal-photo {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .submission-container {
+    padding: 10px;
+  }
+
+  .submission-container header {
+    margin-bottom: 20px;
+  }
+
+  .submission-logo-text {
+    font-size: 24px;
+  }
+
+  .submission-control-panel-filters {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .submission-dropdown-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submission-bulk-delete-button {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .submission-table {
+    font-size: 12px;
+    min-width: 800px;
+  }
+
+  .submission-table th,
+  .submission-table td {
+    padding: 8px 10px;
+    min-width: 80px;
+  }
+
+  .submission-data-container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .submission-container {
+    padding: 10px;
+  }
+
+  .submission-logo-text {
+    font-size: 20px;
+  }
+
+  .submission-table {
+    font-size: 11px;
+  }
+
+  .submission-table th,
+  .submission-table td {
+    padding: 6px 8px;
+  }
+}
+
